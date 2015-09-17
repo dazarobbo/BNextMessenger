@@ -14,7 +14,7 @@
 		"message": "This extension integrates itself with bungie.net's message system - messages you send and receive here appear on the website and vice versa."
 	},
 	"application_about_2": {
-		"message": "You can find more <a href=\"#!\" target=\"blank\">information on bungie.net</a> or check out (or fork!) the extension's <a href=\"https://github.com/dazarobbo/BNextMessenger\" target=\"_blank\">source code on GitHub</a>."
+		"message": "You can find more <a href=\"https://www.bungie.net/en/Clan/1138602\" target=\"blank\">information on bungie.net</a> or check out (or fork!) the extension's <a href=\"https://github.com/dazarobbo/BNextMessenger\" target=\"_blank\">source code on GitHub</a>."
 	},
 	"application_about_3": {
 		"message": "by <a target=\"_blank\" href=\"https://www.bungie.net/en/User/Profile/68974\">dazarobbo</a>"
