@@ -14,7 +14,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 
 	chrome.idle.queryState(Application.constants.statusUpdateInterval, (state) => {
 
-		if(state !== chrome.idle.IdleState.IDLE){
+		if(state !== chrome.idle.IdleState.ACTIVE){
 			return;
 		}
 
