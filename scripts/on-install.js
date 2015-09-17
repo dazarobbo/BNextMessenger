@@ -1,7 +1,7 @@
 
-chrome.runtime.onInstalled.addListener((reason) => {
+chrome.runtime.onInstalled.addListener((details) => {
 
-  if(reason !== chrome.runtime.OnInstalledReason.INSTALL){
+  if(details.reason !== chrome.runtime.OnInstalledReason.INSTALL){
     return;
   }
 
@@ -13,6 +13,7 @@ chrome.runtime.onInstalled.addListener((reason) => {
   obj[Application.constants.storageKeys.emojiSupport] = true;
   obj[Application.constants.storageKeys.statusUpdates] = false;
 
+  console.log("Storage defaults installed");
   chrome.storage.sync.set(obj);
 
 });
