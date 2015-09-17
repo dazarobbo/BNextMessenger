@@ -6,13 +6,6 @@ chrome.alarms.create(Application.constants.alarmKeys.statusUpdates, {
 	periodInMinutes: Math.ceil(Application.constants.statusUpdateInterval / 60)
 });
 
-//TEST
-chrome.idle.setDetectionInterval(15);
-chrome.idle.onStateChanged.addListener((state) => {
-	Application.log(state);
-});
-//END TEST
-
 chrome.alarms.onAlarm.addListener((alarm) => {
 
 	if(!(alarm && alarm.name === Application.constants.alarmKeys.statusUpdates)){
@@ -21,7 +14,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 
 	chrome.idle.queryState(Application.constants.statusUpdateInterval, (state) => {
 
-		if(state !== chrome.idle.IdleState.ACTIVE){
+		if(state !== chrome.idle.IdleState.IDLE){
 			return;
 		}
 
