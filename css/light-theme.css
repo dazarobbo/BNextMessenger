@@ -1,0 +1,95 @@
+
+textarea::-webkit-input-placeholder {
+	color: #999;
+}
+
+.toast{
+	background-color: #323232;
+	color: #fff;
+}
+
+a{
+	color: #039be5;
+}
+
+body{
+	background-color: #fff;
+	color: rgba(0, 0, 0, 0.87);
+}
+
+#loader{
+	background-color: #c0c0c0;
+	background-color: rgba(192, 192, 192, 0.85);
+}
+
+#loader .spinner-layer{
+	border-color: #0099ff;
+}
+
+.collection{
+	background-color: #444;
+	border-color: #e0e0e0;
+}
+
+.collection-item{
+	background-color: #fff !important;
+	border-bottom-color: #e0e0e0 !important;
+}
+
+.collection-item span.title{
+	color: rgba(0, 0, 0, 0.87);
+}
+
+.collection-item p{
+	color: rgba(0, 0, 0, 0.87);
+}
+
+.collection-item a.secondary-content{
+	color: #26a69a;
+}
+
+.collection-item.avatar:hover{
+	background-color: #eee !important;
+}
+
+.collection-item.avatar.user-online{
+	background-color: #c8e6c9;
+}
+
+.side-nav li a{
+	color: #000;
+}
+
+.side-nav{
+	background-color: #fff;
+}
+
+.side-nav li i{
+	color: rgba(0, 0, 0, 0.541176) !important;
+}
+
+.side-nav li a{
+	color: #000 !important;
+}
+
+.side-nav li:hover{
+	background-color: #ddd;
+}
+
+.side-nav li:hover > i{
+
+}
+
+.side-nav li:hover > a{
+
+}
+
+span.spoiler{
+	background-color: #000;
+	color: #000;
+}
+
+span.spoiler:hover{
+	background-color: inherit;
+	color: inherit;
+}

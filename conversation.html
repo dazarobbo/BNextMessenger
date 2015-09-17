@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection">
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+		<script type="text/javascript" src="scripts/lib/Cola.js"></script>
+		<script type="text/javascript" src="scripts/lib/URI.js"></script>
+		<script type="text/javascript" src="scripts/lib/CookieProvider.js"></script>
+		<script type="text/javascript" src="scripts/lib/BungieNet.js"></script>
+		<script type="text/javascript" src="scripts/lib/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="scripts/lib/materialize.min.js"></script>
+		<script type="text/javascript" src="scripts/lib/twemoji.min.js"></script>
+		<script type="text/javascript" src="scripts/lib/jquery.inview.js"></script>
+
+		<script type="text/javascript" src="scripts/Application.js"></script>
+		<script type="text/javascript" src="scripts/Common.js"></script>
+		<script type="text/javascript" src="scripts/conversation-script.js"></script>
+
+		<link type="text/css" rel="stylesheet" href="css/common.css">
+	</head>
+
+	<body>
+
+		<!-- templates -->
+		<div class="hide">
+
+			<div id="messageTemplate">
+				<li class="collection-item avatar">
+					<img class="circle">
+					<span class="title" style="margin-right: 50px; word-wrap: break-word;"></span>
+					<p style="margin-right: 10px; word-wrap: break-word; font-family: 'Segoe UI'; font-size: 14px;"></p>
+					<a class="secondary-content center" href="#!"></a>
+				</li>
+			</div>
+
+      <div id="pageableEnderTemplate">
+        <div class="collectionFooter section center">
+          <a class="waves-effect waves-light btn hide"></a>
+          <span class="hide"></span>
+        </div>
+      </div>
+
+			<div id="conversationDetailsTemplate">
+
+			</div>
+
+		</div>
+
+		<div class="navbar-fixed">
+			<nav>
+				<div class="nav-wrapper blue">
+					<a class="button-collapse" data-activates="sideMenu" href="#!">
+						<i class="material-icons">menu</i>
+					</a>
+					<a href="#!" id="logo" class="brand-logo center"></a>
+					<ul id="sideMenu" class="side-nav"></ul>
+				</div>
+			</nav>
+		</div>
+
+		<div id="loader" class="center">
+			<div class="preloader-wrapper small active">
+				<div class="spinner-layer spinner-blue-only">
+					<div class="circle-clipper right">
+						<div class="circle"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="content">
+
+			<section id="conversation" class="hide">
+				<div class="messageContainer">
+					<ul class="collection"></ul>
+				</div>
+				<div class="messageInputContainer container input-field">
+					<i class="material-icons hide">get_app</i>
+					<textarea id="msgInput"></textarea>
+				</div>
+			</section>
+
+			<section id="settings" class="hide">
+				<div class="section center-align">
+					<a id="leaveBtn" class="btn red"></a>
+				</div>
+			</section>
+
+			<section id="details" class="hide">
+				<div class="container section" style="font-size: 14px;">
+
+				</div>
+			</section>
+
+		</div>
+
+	</body>
+
+</html>

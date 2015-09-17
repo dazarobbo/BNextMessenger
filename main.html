@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection">
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+		<script type="text/javascript" src="scripts/lib/Cola.js"></script>
+		<script type="text/javascript" src="scripts/lib/URI.js"></script>
+		<script type="text/javascript" src="scripts/lib/CookieProvider.js"></script>
+		<script type="text/javascript" src="scripts/lib/BungieNet.js"></script>
+		<script type="text/javascript" src="scripts/lib/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="scripts/lib/materialize.min.js"></script>
+		<script type="text/javascript" src="scripts/lib/twemoji.min.js"></script>
+		<script type="text/javascript" src="scripts/lib/jquery.inview.js"></script>
+
+		<script type="text/javascript" src="scripts/Application.js"></script>
+		<script type="text/javascript" src="scripts/Common.js"></script>
+		<script type="text/javascript" src="scripts/main-script.js"></script>
+
+		<link type="text/css" rel="stylesheet" href="css/common.css">
+
+		<style>
+
+			.collection-item.avatar:hover{
+				cursor: pointer !important;
+			}
+
+		</style>
+	</head>
+
+	<body>
+
+		<!-- templates -->
+		<div class="hide">
+
+			<div id="messageTemplate">
+				<li class="collection-item avatar">
+					<img class="circle">
+					<span class="title" style="margin-right: 50px; word-wrap: break-word;"></span>
+					<p class="truncate" style="margin-right: 10px; word-wrap: break-word;"></p>
+					<a class="secondary-content center" href="#!"></a>
+				</li>
+			</div>
+
+			<div id="pageableEnderTemplate">
+				<div class="collectionFooter section center">
+					<a class="waves-effect waves-light btn hide"></a>
+					<span class="hide"></span>
+				</div>
+			</div>
+
+		</div>
+
+		<div class="navbar-fixed">
+			<nav>
+				<div class="nav-wrapper blue">
+					<a class="button-collapse" data-activates="sideMenu" href="#!">
+						<i class="material-icons">menu</i>
+					</a>
+					<a href="#!" id="logo" class="brand-logo center"></a>
+					<ul id="sideMenu" class="side-nav"></ul>
+				</div>
+			</nav>
+		</div>
+
+		<div id="loader" class="center">
+			<div class="preloader-wrapper small active">
+				<div class="spinner-layer">
+					<div class="circle-clipper right">
+						<div class="circle"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="content" style="overflow-y:scroll;">
+
+			<section id="private" class="hide">
+				<ul class="collection"></ul>
+			</section>
+
+			<section id="group" class="hide">
+				<ul class="collection"></ul>
+			</section>
+
+			<section id="buddies" class="hide">
+				<ul class="collection"></ul>
+			</section>
+
+			<section id="settings" class="hide">
+				<div class="container">
+					<div class="section">
+						<h5></h5>
+						<p>
+							<input id="updateStatusChk" class="filled-in" type="checkbox">
+							<label for="updateStatusChk"></label>
+						</p>
+					</div>
+					<div class="section">
+						<h5></h5>
+						<p>
+							<input id="emojiChk" type="checkbox" class="filled-in">
+							<label for="emojiChk"></label>
+						</p>
+					</div>
+					<div class="section">
+						<h5></h5>
+					</div>
+				</div>
+			</section>
+
+			<section id="about" class="hide">
+				<div class="container section">
+					<p class="flow-text"></p>
+					<p class="flow-text"></p>
+					<p class="flow-text"></p>
+					<p class="flow-text"></p>
+				</div>
+			</section>
+
+		</div>
+
+	</body>
+
+</html>

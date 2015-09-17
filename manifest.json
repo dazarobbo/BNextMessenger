@@ -1,0 +1,48 @@
+{
+	"manifest_version": 2,
+	"name": "__MSG_CHROME_EXT_NAME__",
+	"version": "0.1.0",
+	"default_locale": "en",
+	"description": "__MSG_CHROME_EXT_DESCRIPTION__",
+	"icons": {
+		"16": "images/icon.png",
+		"48": "images/icon.png",
+		"128": "images/icon.png"
+	},
+	"browser_action": {
+		"default_icon": {
+			"19": "images/icon.png",
+			"38": "images/icon.png"
+		},
+		"default_title": "__MSG_CHROME_EXT_SHORT_NAME__",
+		"default_popup": "popup.html"
+	},
+	"author": "dazarobbo",
+	"background": {
+		"persistent": false,
+		"scripts": [
+			"scripts/lib/URI.js",
+			"scripts/lib/CookieProvider.js",
+			"scripts/lib/Cola.js",
+			"scripts/lib/BungieNet.js",
+			"scripts/Application.js",
+			"scripts/status-update-alarm.js",
+			"scripts/on-install.js",
+			"scripts/extension.js"
+		]
+	},
+	"homepage_url": "https://www.bungie.net/en/Clan/1138602",
+	"minimum_chrome_version": "45.0.0.0",
+	"offline_enabled": false,
+	"options_page": "",
+	"permissions": [
+		"alarms",
+		"background",
+		"cookies",
+		"idle",
+		"storage",
+		"tabs",
+		"*://*.bungie.net/*"
+	],
+	"short_name": "__MSG_CHROME_EXT_SHORT_NAME__"
+}

@@ -1,0 +1,149 @@
+{
+
+	"chrome_ext_name": {
+		"message": "BNext Messenger"
+	},
+	"chrome_ext_short_name": {
+		"message": "Messenger"
+	},
+	"chrome_ext_description": {
+		"message": "Messenger extension for bungie.net"
+	},
+
+	"application_about_1": {
+		"message": "This extension integrates itself with bungie.net's message system - messages you send and receive here appear on the website and vice versa."
+	},
+	"application_about_2": {
+		"message": "You can find more <a href=\"#!\" target=\"blank\">information on bungie.net</a> or check out (or fork!) the extension's <a href=\"https://github.com/dazarobbo/BNextMessenger\" target=\"_blank\">source code on GitHub</a>."
+	},
+	"application_about_3": {
+		"message": "by <a target=\"_blank\" href=\"https://www.bungie.net/en/User/Profile/68974\">dazarobbo</a>"
+	},
+	"application_about_4": {
+		"message": "version: $VERSION$",
+		"placeholders": {
+			"version": {
+				"content": "$1"
+			}
+		}
+	},
+
+	"application_menu_private": {
+		"message": "Private"
+	},
+	"application_menu_group": {
+		"message": "Group"
+	},
+	"application_menu_buddies": {
+		"message": "Buddies"
+	},
+	"application_menu_settings": {
+		"message": "Settings"
+	},
+	"application_menu_about": {
+		"message": "About"
+	},
+
+
+	"application_pageable_load_button": {
+		"message": "load more"
+	},
+	"application_pageable_no_more": {
+		"message": "nothing more to show"
+	},
+
+
+	"application_settings_status_updates_heading": {
+		"message": "status updates"
+	},
+	"application_settings_status_updates_summary": {
+		"message": "update online status on bungie.net"
+	},
+
+	"application_settings_emoji_heading": {
+		"message": "emoji"
+	},
+	"application_settings_emoji_summary": {
+		"message": "enable emoji for messages"
+	},
+
+	"application_settings_theme_heading": {
+		"message": "theme"
+	},
+	"application_settings_theme_option_light": {
+		"message": "light"
+	},
+	"application_settings_theme_option_dark": {
+		"message": "dark"
+	},
+
+
+	"application_conversation_messagebox_placeholder": {
+		"message": "write something..."
+	},
+	"application_conversation_leave_btn": {
+		"message": "leave conversation"
+	},
+
+
+	"application_conversation_details_id": {
+		"message": "Conversation ID"
+	},
+	"application_conversation_details_started_date": {
+		"message": "Started on"
+	},
+	"application_conversation_details_message_count": {
+		"message": "Number of messages"
+	},
+	"application_conversation_details_last_active": {
+		"message": "Last active"
+	},
+	"application_conversation_details_last_read": {
+		"message": "Last read"
+	},
+	"application_conversation_details_type_group": {
+		"message": "Group"
+	},
+	"application_conversation_details_type_user": {
+		"message": "Started by"
+	},
+	"application_conversation_details_participants": {
+		"message": "Participants"
+	},
+
+
+
+
+	"error_unknown_user": {
+		"message": "[unknown user]"
+	},
+
+	"application_error_unknown": {
+		"message": "An unknown error has occurred"
+	},
+	"application_error_bungie_net": {
+		"message": "bungie.net error $CODE$ - $REASON$",
+		"placeholders": {
+			"code": {
+				"content": "$1"
+			},
+			"reason": {
+				"content": "$2"
+			}
+		}
+	},
+	"application_error_code_1": {
+		"message": "You need to sign in to bungie.net"
+	},
+	"application_error_code_3": {
+		"message": "There was a problem syncing some data"
+	},
+	"application_error_code_4": {
+		"message": "There was a problem storing some local data"
+	},
+	"application_error_code_6": {
+		"message": "Couldn't upload to imgur"
+	}
+
+
+}

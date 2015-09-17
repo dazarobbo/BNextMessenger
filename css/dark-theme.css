@@ -1,0 +1,95 @@
+
+textarea::-webkit-input-placeholder {
+	color: #999;
+}
+
+.toast{
+	background-color: #ebebeb;
+	color: #000;
+}
+
+a{
+	color: #4ab7ed;
+}
+
+body{
+	background-color: #373737;
+	color: #c7c7c7;
+}
+
+#loader{
+	background-color: #939393;
+	background-color: rgba(147, 147, 147, 0.85);
+}
+
+#loader .spinner-layer{
+	border-color: #ffff00;
+}
+
+.collection{
+	background-color: #373737;
+	border-color: #777;
+}
+
+.collection-item{
+	background-color: #373737 !important;
+	border-bottom-color: #777777 !important;
+}
+
+.collection-item span.title{
+	color: #e6e6e6;
+}
+
+.collection-item p{
+	color: #c7c7c7; /* remove */
+}
+
+.collection-item a.secondary-content{
+	color: #88cec7;
+}
+
+.collection-item.avatar:hover{
+	background-color: #444 !important;
+}
+
+.collection-item.avatar.user-online{
+	background-color: #c8e6c9;
+}
+
+.side-nav li a{
+	color: #000;
+}
+
+.side-nav{
+	background-color: #373737;
+}
+
+.side-nav li i{
+	color: #c7c7c7 !important;
+}
+
+.side-nav li a{
+	color: #c7c7c7 !important;
+}
+
+.side-nav li:hover{
+
+}
+
+.side-nav li:hover > i{
+	color: #000 !important;
+}
+
+.side-nav li:hover > a{
+	color: #000 !important;
+}
+
+span.spoiler{
+	background-color: #000;
+	color: #000;
+}
+
+span.spoiler:hover{
+	background-color: inherit;
+	color: inherit;
+}
