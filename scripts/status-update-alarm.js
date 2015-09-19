@@ -1,5 +1,5 @@
 
-console.log("Running status updates...");
+Application.log("Running status updates...");
 
 //Create alarm for updating status
 chrome.alarms.create(Application.constants.alarmKeys.statusUpdates, {

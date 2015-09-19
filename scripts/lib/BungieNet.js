@@ -1,6 +1,6 @@
 /* jshint sub: true */
 
-((globalScope) => {
+((__scope) => {
 	"use strict";
 
 	var cookieProvider = null;
@@ -1604,8 +1604,6 @@
 	});
 
 
-
-
-	globalScope.BungieNet = BungieNet;
+	__scope.BungieNet = BungieNet;
 
 })(this);

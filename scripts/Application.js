@@ -1,13 +1,12 @@
-/* global Cola, chrome, BungieNet */
 
-var Application = { };
+var Application = {};
 Object.defineProperties(Application, {
 
 	getLongDateFormat: {
 		/**
 		 * Returns a long date string in a locale-aware format
-		 * @param  {Date} d [description]
-		 * @return {String}   [description]
+		 * @name Application.getLongDateFormat
+		 * @param {Date} d - the date to format
 		 */
 		value: (d) => {
 			return d.toLocaleString([], {
@@ -176,8 +175,6 @@ Object.defineProperties(Application, {
 				chrome.storage.sync.get(key, (item) => {
 
 					if(chrome.runtime.error){
-						//Modify these to use reject inside callbacks
-						//throw only in .then()
 						return reject(new Application.Error(
 							Application.Error.codes.chrome_storage_sync_error,
 							chrome.runtime.error,
@@ -337,8 +334,7 @@ Object.defineProperties(Application.Dialog, {
 					width: 0,
 					height: 0
 				}, (wndw) => {
-					var dialog = new Application.Dialog(wndw.id);
-					return resolve(dialog);
+					return resolve(new Application.Dialog(wndw.id));
 				});
 			});
 		}
@@ -348,8 +344,7 @@ Object.defineProperties(Application.Dialog, {
 		value: () => {
 			return new Promise((resolve) => {
 				chrome.windows.getCurrent({}, (wndw) => {
-					var dialog = new Application.Dialog(wndw.id);
-					return resolve(dialog);
+					return resolve(new Application.Dialog(wndw.id));
 				});
 			});
 		}
@@ -362,37 +357,43 @@ Object.defineProperties(Application.Dialog.prototype, {
 		value: function() {
 			return new Promise((resolve) => {
 				document.title = chrome.i18n.getMessage("chrome_ext_name");
-				Common.loadStylesheets();
-				Common.applyThemeFromStorage();
-				Common.applySizing();
-				resolve();
+				Common.loadStylesheets()
+					.then(Common.applyThemeFromStorage)
+					.then(Common.applySizing)
+					.then(() => resolve());
 			});
 		}
 	},
 
 	close: {
 		value: function(){
-			window.close();
+			return new Promise((resolve) => {
+				chrome.windows.remove(this.windowId, () => resolve());
+			});
 		}
 	},
 
 	focus: {
 		value: function() {
-			chrome.windows.update(
-				this.windowId, {
-					focused: true
-				}
-			);
+			return new Promise((resolve) => {
+				chrome.windows.update(
+					this.windowId, {
+						focused: true
+					}, () => resolve()
+				);
+			});
 		}
 	},
 
 	getAttention: {
 		value: function(){
-			chrome.windows.update(
-				this.windowId, {
-					drawAttention: true
-				}
-			);
+			return new Promise((resolve) => {
+				chrome.windows.update(
+					this.windowId, {
+						drawAttention: true
+					}, () => resolve()
+				);
+			});
 		}
 	},
 
@@ -582,10 +583,9 @@ Object.defineProperties(Application.Conversation, {
 
 			var conv = new Application.Conversation();
 
+			//Copy all the properties
 			for(var prop in result.detail){
-				if(result.detail.hasOwnProperty(prop)){
-					conv[prop] = result.detail[prop];
-				}
+				conv[prop] = result.detail[prop];
 			}
 
 			conv.conversationId = parseInt(conv.conversationId, 10);
@@ -870,98 +870,6 @@ Object.defineProperties(Application.Conversation, {
 });
 Object.defineProperties(Application.Conversation.prototype, {
 
-	body: {
-		value: "",
-		writable: true
-	},
-
-	conversationId: {
-		value: 0,
-		writable: true
-	},
-
-	dateStarted: {
-		value: new Date(0),
-		writable: true
-	},
-
-	invitationId: {
-		value: "0",
-		writable: true
-	},
-
-	isAutoResponse: {
-		value: false,
-		writable: true
-	},
-
-	isGlobal: {
-		value: false,
-		writable: true
-	},
-
-	isLocked: {
-		value: false,
-		writable: true
-	},
-
-	isRead: {
-		value: true,
-		writable: true
-	},
-
-	lastMessageId: {
-		value: "0",
-		writable: true
-	},
-
-	lastMessageSent: {
-		value: new Date(0),
-		writable: true
-	},
-
-	lastRead: {
-		value: new Date(0),
-		writable: true
-	},
-
-	memberFromId: {
-		value: new Date(0),
-		writable: true
-	},
-
-	ownerEntityId: {
-		value: "0",
-		writable: true
-	},
-
-	ownerEntityType: {
-		value: 0,
-		writable: true
-	},
-
-	starter: {
-		value: "0",
-		writable: true
-	},
-
-	status: {
-		value: 1,
-		writable: true
-	},
-
-	targetMembershipId: {
-		value: "0",
-		writable: true
-	},
-
-	totalMessageCount: {
-		value: 0,
-		writable: true
-	},
-
-	//
-
 	participants: {
 		value: [],
 		writable: true
@@ -1073,9 +981,7 @@ Object.defineProperties(Application.Group, {
 
 			//Copy values
 			for(var prop in result){
-				if(result.hasOwnProperty(prop)){
-					g[prop] = result[prop];
-				}
+				g[prop] = result[prop];
 			}
 
 			g.creationDate = new Date(g.creationDate);
@@ -1195,48 +1101,6 @@ Object.defineProperties(Application.Message, {
 });
 Object.defineProperties(Application.Message.prototype, {
 
-	body: {
-		value: "",
-		writable: true
-	},
-
-	conversationId: {
-		value: "0",
-		writable: true
-	},
-
-	dateSent: {
-		value: new Date(0),
-		writable: true
-	},
-
-	invitationId: {
-		value: "0",
-		writable: true
-	},
-
-	isAutoResponse: {
-		value: false,
-		writable: true
-	},
-
-	isDeleted: {
-		value: false,
-		writable: true
-	},
-
-	memberFromId: {
-		value: "0",
-		writable: true
-	},
-
-	messageId: {
-		value: "0",
-		writable: true
-	},
-
-	//
-
 	sender: {
 		/**
 		 * @type {User}
@@ -1275,9 +1139,7 @@ Object.defineProperties(Application.User, {
 			var u = new Application.User();
 
 			for(var prop in result){
-				if(result.hasOwnProperty(prop)){
-					u[prop] = result[prop];
-				}
+				u[prop] = result[prop];
 			}
 
 			u.firstAccess = new Date(u.firstAccess);
@@ -1363,143 +1225,6 @@ Object.defineProperties(Application.User, {
 });
 Object.defineProperties(Application.User.prototype, {
 
-	about: {
-		value: "",
-		writable: true
-	},
-
-	context: {
-		value: null,
-		writable: true
-	},
-
-	ignoreStatus: {
-		value: null,
-		writable: true
-	},
-
-	isFollowing: {
-		value: false,
-		writable: true
-	},
-
-	displayName: {
-		value: "",
-		writable: true
-	},
-
-	firstAccess: {
-		value: new Date(0),
-		writable: true
-	},
-
-	followerAcount: {
-		value: 0,
-		writable: true
-	},
-
-	followingUserCount: {
-		value: 0,
-		writable: true
-	},
-
-	isDeleted: {
-		value: false,
-		writable: true
-	},
-
-	lastBanReportId: {
-		value: "0",
-		writable: true
-	},
-
-	lastUpdate: {
-		value: new Date(0),
-		writable: true
-	},
-
-	locale: {
-		value: "en",
-		writable: true
-	},
-
-	localeInheritDefault: {
-		value: true,
-		writable: true
-	},
-
-	membershipId: {
-		value: "0",
-		writable: true
-	},
-
-	profilePicture: {
-		value: 0,
-		writable: true
-	},
-
-	profilePicturePath: {
-		value: "/",
-		writable: true
-	},
-
-	profileTheme: {
-		value: 0,
-		writable: true
-	},
-
-	profileThemeName: {
-		value: "",
-		writable: true
-	},
-
-	showActivity: {
-		value: true,
-		writable: true
-	},
-
-	showGroupMessaging: {
-		value: true,
-		writable: true
-	},
-
-	statusDate: {
-		value: new Date(0),
-		writable: true
-	},
-
-	statusText: {
-		value: "",
-		writable: true
-	},
-
-	successMessageFlags: {
-		value: "0",
-		writable: true
-	},
-
-	uniqueName: {
-		value: "",
-		writable: true
-	},
-
-	userTitle: {
-		value: 0,
-		writable: true
-	},
-
-	userTitleDisplay: {
-		value: "",
-		writable: true
-	},
-
-	xboxDisplayName: {
-		value: "",
-		writable: true
-	},
-
-	//
-
 	getHtmlDecodedAbout: {
 		value: function() {
 			return Cola.functions.string.htmlDecode(this.about);
@@ -1545,7 +1270,14 @@ Object.defineProperties(Application.User.prototype, {
 				this.firstAccess,
 				this.lastUpdate,
 				this.statusDate
-			];
+			].map(d => d);
+
+			if(dates.length === 0){
+				return null;
+			}
+			else if(dates.length === 1){
+				return dates[0];
+			}
 
 			return dates.reduce((a, b) => {
 				return a > b ? a : b;

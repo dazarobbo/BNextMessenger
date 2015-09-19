@@ -112,8 +112,7 @@ function formatBody(html){
 
 				//if there are no matches just exit
 				if(matches.length === 0){
-					resolve(str);
-					return;
+					return resolve(str);
 				}
 
 				//1. lower case all matched usernames
@@ -183,7 +182,7 @@ function formatBody(html){
 					});
 
 					//when all replacements done, resolve the string
-					resolve(str);
+					return resolve(str);
 
 				});
 
@@ -220,7 +219,7 @@ function formatBody(html){
 
 					});
 
-					resolve(str);
+					return resolve(str);
 
 				});
 			});
@@ -281,9 +280,7 @@ function formatMessage(m){
 					options.year = "numeric";
 				}
 
-				return m.dateSent.toLocaleString([
-					chrome.i18n.getMessage("@@ui_locale").replace("_", "-")
-				], options);
+				return m.dateSent.toLocaleString([], options);
 
 			})());
 
@@ -459,7 +456,7 @@ function handleWindowFocus(evt){
 		messages
 			.filter(m => m.dateSeen === null)
 			.forEach(m => m.dateSeen = new Date());
-		resolve();
+		return resolve();
 	});
 }
 
@@ -646,7 +643,7 @@ function handleFileDrop(evt){
 function showConversation(){
 	return new Promise((resolve) => {
 		$("#conversation").removeClass("hide");
-		resolve();
+		return resolve();
 	});
 }
 
@@ -654,7 +651,7 @@ function showSettings(){
 	return new Promise((resolve) => {
 		$("#settings").removeClass("hide");
 		displaySettings();
-		resolve();
+		return resolve();
 	});
 }
 
@@ -662,7 +659,7 @@ function showDetails(){
 	return new Promise((resolve) => {
 		$("#details").removeClass("hide").empty();
 		displayDetails();
-		resolve();
+		return resolve();
 	});
 }
 
@@ -687,7 +684,7 @@ function updateTitle(count){
 						.map(u => u.displayName)
 						.join("; ");
 
-					resolve(str);
+					return resolve(str);
 
 				});
 			});
@@ -741,7 +738,7 @@ function calculateInterval(){
 function updateProxy(){
 	return updateConversation().then(() => {
 		var milli = calculateInterval();
-		console.log("Checking again in " + (milli / 1000) + " seconds");
+		Application.log("Checking again in " + (milli / 1000) + " seconds");
     window.clearTimeout(timeoutId); //clear any existing timeouts just in case...
 		timeoutId = window.setTimeout(updateProxy, milli);
 	});
@@ -773,7 +770,6 @@ function addLocaleElements(){
     $("#leaveBtn").text(chrome.i18n.getMessage(
       "application_conversation_leave_btn"));
 
-
     return resolve();
 
   });
@@ -800,16 +796,10 @@ function addEventHandlers(){
         );
       });
 
-
     return resolve();
 
   });
 }
-
-
-
-
-
 
 
 function dialogReady(){

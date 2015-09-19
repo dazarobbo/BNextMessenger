@@ -1,5 +1,4 @@
 
-
 var Common = {
 
 	populateNav: (items) => {
@@ -49,7 +48,7 @@ var Common = {
 				closeOnClick: true
 			});
 
-			resolve();
+			return resolve();
 
 		});
 	},
@@ -57,21 +56,21 @@ var Common = {
 	showLoader: () => {
 		return new Promise((resolve) => {
 			$("#loader").slideDown();
-			resolve();
+			return resolve();
 		});
 	},
 
 	hideLoader: () => {
 		return new Promise((resolve) => {
 			$("#loader").slideUp();
-			resolve();
+			return resolve();
 		});
 	},
 
 	displayMessage: (msg) => {
 		return new Promise((resolve) => {
 			Materialize.toast(msg, 5000);
-			resolve();
+			return resolve();
 		});
 	},
 
@@ -80,7 +79,7 @@ var Common = {
 			$("link[rel='alternate stylesheet']").each(function(){
 				$(this).prop("disabled", $(this).attr("title") !== themeName);
 			});
-			resolve();
+			return resolve();
 		});
 	},
 
@@ -96,17 +95,18 @@ var Common = {
   },
 
 	loadStylesheets: () => {
-
-		for(var name in Application.constants.themes){
-			$("<link>").attr({
-				type: "text/css",
-				rel: "alternate stylesheet",
-				href: "css/" + name + "-theme.css",
-				title: name,
-				disabled: "disabled"
-			}).appendTo("head");
-		}
-
+		return new Promise((resolve) => {
+			for(var name in Application.constants.themes){
+				$("<link>").attr({
+					type: "text/css",
+					rel: "alternate stylesheet",
+					href: "css/" + name + "-theme.css",
+					title: name,
+					disabled: "disabled"
+				}).appendTo("head");
+			}
+			return resolve();
+		});
 	},
 
   applySizing: () => {
@@ -141,15 +141,14 @@ var Common = {
 				Application.constants.dialogWindowHeight
 			);
 
-      resolve();
+      return resolve();
 
     });
   },
 
   handleError: (err) => {
 
-		console.log("Error thrown...");
-		console.log(err);
+		Application.log(err);
 
 		var str;
 
@@ -165,46 +164,25 @@ var Common = {
   },
 
 	openConversationWindow: (conversationId) => {
-		chrome.windows.create({
-			url: "conversation.html?conversationId=" + conversationId,
-			type: "popup",
-			focused: true,
-			width: Application.constants.dialogWindowWidth,
-			height: Application.constants.dialogWindowHeight
+		return new Promise((resolve) => {
+			chrome.windows.create({
+				url: "conversation.html?conversationId=" + conversationId,
+				type: "popup",
+				focused: true,
+				width: Application.constants.dialogWindowWidth,
+				height: Application.constants.dialogWindowHeight
+			}, () => resolve());
 		});
 	},
 
 	getAttention: () => {
-		chrome.windows.update(
-			chrome.windows.WINDOW_ID_CURRENT,
-			{
-				drawAttention: true
-			}
-		);
-	},
-
-	platformRequestErrorHandler: (appErr) => {
-
-		//TODO: use of this should be replace with error handler above
-
-		if("code" in appErr){
-
-			if(appErr.code === Application.Error.codes.bungie_net_error){
-				Common.displayMessage(chrome.i18n.getMessage("application_error_code_1", [
-					appErr.data.errorCode,
-					appErr.data.errorStatus
-				]));
-			}
-			else{
-				Common.displayMessage(chrome.i18n.getMessage(
-					"application_error_code_" + appErr.code));
-			}
-
-		}
-		else{
-			Common.displayMessage(chrome.i18n.getMessage("application_error_unknown"));
-		}
-
+		return new Promise((resolve) => {
+			chrome.windows.update(
+				chrome.windows.WINDOW_ID_CURRENT, {
+					drawAttention: true
+				}, () => resolve()
+			);
+		});
 	}
 
 };

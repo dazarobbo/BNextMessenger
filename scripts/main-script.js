@@ -197,8 +197,7 @@ function addLocaleElements(){
       );
     }
 
-
-    resolve();
+    return resolve();
 
   });
 }
@@ -264,7 +263,7 @@ function loadPrivateMessages(){
 			});
 		}, (err) => {
 			currentPmPage = Math.max(0, --currentPmPage);
-			Common.platformRequestErrorHandler(err);
+			Common.handleError(err);
 		}).then(() => resolve());
 	});
 }
@@ -291,7 +290,7 @@ function loadGroupMessages(){
 			});
 		}, (err) => {
 			currentGroupPage = Math.max(0, --currentGroupPage);
-			Common.platformRequestErrorHandler(err);
+			Common.handleError(err);
 		}).then(() => resolve());
 	});
 }
@@ -312,7 +311,7 @@ function loadBuddies(){
 			});
 
 		}, Common.handleError).then(() => {
-			resolve();
+			return resolve();
 		});
 
 	});
