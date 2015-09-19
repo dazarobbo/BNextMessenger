@@ -10,9 +10,7 @@ Object.defineProperties(Application, {
 		 * @return {String}   [description]
 		 */
 		value: (d) => {
-			return d.toLocaleString([
-					chrome.i18n.getMessage("@@ui_locale").replace("_", "-")
-				], {
+			return d.toLocaleString([], {
 					hour12: true,
 					weekday: "long",
 					year: "numeric",
