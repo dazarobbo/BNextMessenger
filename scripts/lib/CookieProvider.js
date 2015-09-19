@@ -32,4 +32,5 @@
 	});
 
 	__scope.CookieProvider = provider;
+	
 })(this);
