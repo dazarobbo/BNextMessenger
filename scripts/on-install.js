@@ -16,4 +16,8 @@ chrome.runtime.onInstalled.addListener((details) => {
   Application.log("Storage defaults installed");
   chrome.storage.sync.set(obj);
 
+  //Set uninstall URL
+  chrome.runtime.setUninstallURL(
+    "https://www.bungie.net/en/Clan/Post/1138602/154853377");
+
 });
