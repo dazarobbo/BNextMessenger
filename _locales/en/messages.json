@@ -121,6 +121,9 @@
 	"application_error_unknown": {
 		"message": "An unknown error has occurred"
 	},
+	"application_error_bungie_net_lib": {
+		"message": "Coudn't communicate with bungie.net"
+	},
 	"application_error_bungie_net": {
 		"message": "bungie.net error $CODE$ - $REASON$",
 		"placeholders": {
@@ -136,10 +139,10 @@
 		"message": "You need to sign in to bungie.net"
 	},
 	"application_error_code_3": {
-		"message": "There was a problem syncing some data"
+		"message": "There was a problem with Google's Sync data"
 	},
 	"application_error_code_4": {
-		"message": "There was a problem storing some local data"
+		"message": "There was a problem with local storage data"
 	},
 	"application_error_code_6": {
 		"message": "Couldn't upload to imgur"

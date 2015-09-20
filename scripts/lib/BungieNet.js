@@ -849,7 +849,6 @@
 	};
 	BungieNet.Error.prototype = Object.create(Error.prototype);
 	BungieNet.Error.prototype.constructor = BungieNet.Error;
-
 	Object.defineProperties(BungieNet.Error, {
 		codes: {
 			value: {

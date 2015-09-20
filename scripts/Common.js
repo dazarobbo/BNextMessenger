@@ -152,13 +152,16 @@ var Common = {
 
 		var str;
 
-		if(err instanceof Error){
+		if(err instanceof BungieNet.Error){
+			str = chrome.i18n.getMessage("application_error_bungie_net_lib");
+		}
+		else if(err instanceof Error){
 			str = err.toString();
 		}
 		else{
 			str = chrome.i18n.getMessage("application_error_unknown");
 		}
-
+		
 		Common.displayMessage(Cola.functions.string.htmlEncode(str));
 
   },

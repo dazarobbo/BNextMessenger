@@ -30,9 +30,13 @@ Object.defineProperties(Application, {
 		 */
 		value: () => {
 			return new Promise((resolve) => {
-				return resolve(new BungieNet.Platform({
+
+				var p = new BungieNet.Platform({
 					apiKey: Application.constants.apiKey
-				}));
+				});
+
+				return resolve(p);
+				
 			});
 		}
 	},
@@ -125,8 +129,9 @@ Object.defineProperties(Application, {
 	},
 
 	log: {
-		value: (str) => {
-			console.log(Application.getLongDateFormat(new Date()) + ": " + str);
+		value: (o) => {
+			console.log(Application.getLongDateFormat(new Date()));
+			console.log(o);
 		}
 	},
 
