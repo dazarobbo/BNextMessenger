@@ -7,4 +7,4 @@ This isn't ready to be published on the Chrome web store just yet, but if you'd 
 
 That's it!
 
-**NOTE: the extension could break, malfunction, do unintended things, become a 747, etc... However, it does do what it's supposed to. Periodically uninstalling and reinstalling it and disabling it from the Chrome Extensions page would be a good idea.**
+**NOTE: the extension could break, malfunction, etc... However, it does do what it's supposed to. Periodically uninstalling and reinstalling it and disabling it from the Chrome Extensions page would be a good idea if you're worried.**
