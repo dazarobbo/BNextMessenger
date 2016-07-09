@@ -36,7 +36,7 @@ Object.defineProperties(Application, {
 				});
 
 				return resolve(p);
-				
+
 			});
 		}
 	},
@@ -527,6 +527,10 @@ Object.defineProperties(Application.constants, {
 	},
 
 	imgurClientId: {
+		/**
+		 * Imgur API client id
+		 * @type {String}
+		 */
 		value: "7ac2508308cdec3"
 	},
 
