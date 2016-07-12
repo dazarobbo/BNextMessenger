@@ -14,10 +14,21 @@ textarea::-webkit-input-placeholder {
 	padding-bottom: 10px;
 }
 
+img.emoji{
+	height: 1em;
+	width: 1em;
+	margin: 0 .05em 0 .1em;
+	vertical-align: -0.1em;
+}
+
 /* body */
 
 nav .button-collapse{
   margin-left: 10px;
+}
+
+nav .side-nav li{
+	padding-left: 10px;
 }
 
 #loader{

@@ -233,13 +233,14 @@ function formatBody(html){
 
 					if(doEmoji){
 
+            //if string only contains an emoji
 						if(onlyEmoji){
 							str = str.trim();
 						}
 
-						str = twemoji.parse(str, (icon, opts, variant) => {
-							var size = onlyEmoji ? "36x36" : "16x16";
-							return "".concat(opts.base, size, "/", icon, opts.ext);
+						str = twemoji.parse(str, (iconId, opts) => {
+              //default size under v2 is now 72x72, this is too big!
+							return "".concat(opts.base, opts.size, "/", iconId, opts.ext);
 						});
 
 					}
@@ -720,16 +721,12 @@ function calculateInterval(){
 	}
 
 	var diff = Date.now() - delta;
-
-	//var x = (diff - 0) / (intervals.max - 0);
 	var x = diff / intervals.max;
 	var y = Math.pow(x, 2.3);
 	var total = (y + 1) * diff;
 
 	total = Math.max(intervals.min, total);
 	total = Math.min(intervals.max, total);
-
-	//console.log("diff=" + diff + ", delta=" + delta + ", x=" + x + ", y=" + y + ", total=" + total);
 
 	return total;
 

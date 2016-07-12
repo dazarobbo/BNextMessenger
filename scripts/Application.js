@@ -2,6 +2,15 @@
 var Application = {};
 Object.defineProperties(Application, {
 
+	/**
+	 * Interface adaptor for browser-agnosticism
+	 * @type {Object}
+	 */
+	browserAdaptor: {
+		writable: true,
+		value: null
+	},
+
 	getLongDateFormat: {
 		/**
 		 * Returns a long date string in a locale-aware format
@@ -49,7 +58,6 @@ Object.defineProperties(Application, {
 		value: () => {
 
 			//Could also use Date.now instead
-
 			var nonceLength = Application.constants.statusUpdateNonceLength;
 			var max = parseInt("9".repeat(nonceLength), 10);
 			var min = parseInt("1" + "0".repeat(nonceLength - 1), 10);
@@ -61,6 +69,10 @@ Object.defineProperties(Application, {
 	},
 
 	getMainWindowId: {
+		/**
+		 * Finds the ID of the main chat app window
+		 * @return {Promise}
+		 */
 		value: () => {
 			return new Promise((resolve, reject) => {
 				chrome.windows.getAll({ populate: true }, (wndws) => {
@@ -93,6 +105,11 @@ Object.defineProperties(Application, {
 	},
 
 	getConversationWindowId: {
+		/**
+		 * Finds the ID of the window with the given chat id
+		 * @param  {Number} convId [description]
+		 * @return {Promise}        [description]
+		 */
 		value: (convId) => {
 			return new Promise((resolve, reject) => {
 				chrome.windows.getAll({ populate: true }, (wndws) => {
@@ -128,10 +145,25 @@ Object.defineProperties(Application, {
 		}
 	},
 
+	getLocaleMessage: {
+		/**
+		 * Gets the relevant locale message with a given key
+		 * @param mixed
+		 * @return {String}
+		 */
+		value: (...args) => {
+			return Application.browserAdaptor.getLocaleMessage.apply(null, args);
+		}
+	},
+
 	log: {
+		/**
+		 * Log an application-level message
+		 * @param  {mixed} o [description]
+		 * @return {void}   [description]
+		 */
 		value: (o) => {
-			console.log(Application.getLongDateFormat(new Date()));
-			console.log(o);
+			console.log(Application.getLongDateFormat(new Date()), o);
 		}
 	},
 
@@ -139,7 +171,7 @@ Object.defineProperties(Application, {
 		/**
 		 * Object containing query string parameters
 		 * @see http://stackoverflow.com/a/979995/570787
-		 * @return {Object}   [description]
+		 * @return {Object} [description]
 		 */
 		value: (() => {
 
@@ -175,22 +207,11 @@ Object.defineProperties(Application, {
 		 * @param  {String} key [description]
 		 * @return {Promise}     [description]
 		 */
-		value: (key) => {
-			return new Promise((resolve, reject) => {
-				chrome.storage.sync.get(key, (item) => {
-
-					if(chrome.runtime.error){
-						return reject(new Application.Error(
-							Application.Error.codes.chrome_storage_sync_error,
-							chrome.runtime.error,
-							key
-						));
-					}
-
-					return resolve(item[key]);
-
-				});
-			});
+		value: (...args) => {
+			return Application
+				.browserAdaptor
+				.getSyncValue
+				.apply(null, args);
 		}
 	},
 
@@ -201,27 +222,11 @@ Object.defineProperties(Application, {
 		 * @param  {mixed} value [description]
 		 * @return {Promise}       [description]
 		 */
-		value: (key, value) => {
-			return new Promise((resolve, reject) => {
-
-				var obj = {};
-				obj[key] = value;
-
-				chrome.storage.sync.set(obj, () => {
-
-					if(chrome.runtime.error){
-						return reject(new Application.Error(
-							Application.Error.codes.chrome_storage_sync_error,
-							chrome.runtime.error,
-							key
-						));
-					}
-
-					return resolve();
-
-				});
-
-			});
+		value: (...args) => {
+			return Application
+				.browserAdaptor
+				.setSyncValue
+				.apply(null, args);
 		}
 	},
 
@@ -231,22 +236,11 @@ Object.defineProperties(Application, {
 		 * @param  {String} key [description]
 		 * @return {Promise}     [description]
 		 */
-		value: (key) => {
-			return new Promise((resolve, reject) => {
-				chrome.storage.local.get(key, (item) => {
-
-					if(chrome.runtime.error){
-						return reject(new Application.Error(
-							Application.Error.codes.chrome_storage_local_error,
-							chrome.runtime.error,
-							key
-						));
-					}
-
-					return resolve(item[key]);
-
-				});
-			});
+		value: (...args) => {
+			return Application
+				.browserAdaptor
+				.getLocalValue
+				.apply(null, args);
 		}
 	},
 
@@ -257,31 +251,20 @@ Object.defineProperties(Application, {
 		 * @param  {mixed} value [description]
 		 * @return {Promise}       [description]
 		 */
-		value: (key, value) => {
-			return new Promise((resolve, reject) => {
-
-				var obj = {};
-				obj[key] = value;
-
-				chrome.storage.local.set(obj, () => {
-
-					if(chrome.runtime.error){
-						return reject(new Application.Error(
-							Application.Error.codes.chrome_storage_local_error,
-							chrome.runtime.error,
-							key
-						));
-					}
-
-					return resolve();
-
-				});
-
-			});
+		value: (...args) => {
+			return Application
+				.browserAdaptor
+				.setLocalValue
+				.apply(null, args);
 		}
 	},
 
 	uploadToImgur: {
+		/**
+		 * Uploads an image file to imgur
+		 * @param  {File} file [description]
+		 * @return {Promise}      [description]
+		 */
 		value: (file) => {
 			return new Promise((resolve, reject) => {
 
@@ -331,6 +314,11 @@ Object.defineProperties(Application, { Dialog: {
 Object.defineProperties(Application.Dialog, {
 
 	create: {
+		/**
+		 * Create a new dialog-type window
+		 * @param  {String} url [description]
+		 * @return {Promise}     new window ID
+		 */
 		value: (url) => {
 			return new Promise((resolve) => {
 				chrome.windows.create({
@@ -346,6 +334,10 @@ Object.defineProperties(Application.Dialog, {
 	},
 
 	fromCurrent: {
+		/**
+		 * Create a new application dialog type from the current window ID
+		 * @return {Dialog} [description]
+		 */
 		value: () => {
 			return new Promise((resolve) => {
 				chrome.windows.getCurrent({}, (wndw) => {
@@ -359,9 +351,13 @@ Object.defineProperties(Application.Dialog, {
 Object.defineProperties(Application.Dialog.prototype, {
 
 	init: {
+		/**
+		 * Initialise the dialog
+		 * @return {Promise} [description]
+		 */
 		value: function() {
 			return new Promise((resolve) => {
-				document.title = chrome.i18n.getMessage("chrome_ext_name");
+				document.title = Application.getLocaleMessage("chrome_ext_name");
 				Common.loadStylesheets()
 					.then(Common.applyThemeFromStorage)
 					.then(Common.applySizing)
@@ -371,6 +367,10 @@ Object.defineProperties(Application.Dialog.prototype, {
 	},
 
 	close: {
+		/**
+		 * Close a dialog
+		 * @return {Promise} [description]
+		 */
 		value: function(){
 			return new Promise((resolve) => {
 				chrome.windows.remove(this.windowId, () => resolve());
@@ -379,6 +379,10 @@ Object.defineProperties(Application.Dialog.prototype, {
 	},
 
 	focus: {
+		/**
+		 * Focus on the dialog
+		 * @return {Promise} [description]
+		 */
 		value: function() {
 			return new Promise((resolve) => {
 				chrome.windows.update(
@@ -391,6 +395,10 @@ Object.defineProperties(Application.Dialog.prototype, {
 	},
 
 	getAttention: {
+		/**
+		 * Grab user's attention to the dialog
+		 * @return {Promise} [description]
+		 */
 		value: function(){
 			return new Promise((resolve) => {
 				chrome.windows.update(
@@ -403,18 +411,34 @@ Object.defineProperties(Application.Dialog.prototype, {
 	},
 
 	addNavigation: {
+		/**
+		 * Adds navigation information to the dialog
+		 * @param  {Array} arr array of navigation items
+		 * @return {Promise}     [description]
+		 */
 		value: function(arr){
 			return Common.populateNav(arr);
 		}
 	},
 
 	displayMessage: {
+		/**
+		 * Displays a popup message
+		 * @param  {String} str html string
+		 * @return {void}     [description]
+		 */
 		value: function(str){
+			//TODO: async?
 			Materialize.toast(str, 5000);
 		}
 	},
 
 	setPageTitle: {
+		/**
+		 * Sets the dialog's title
+		 * @param  {String} str [description
+		 * @return {[type]}     [description]
+		 */
 		value: function(str){
 			$("#logo").text(str);
 		}
@@ -435,15 +459,24 @@ Application.Error.prototype.constructor = Application.Error;
 Object.defineProperties(Application.Error.prototype, {
 
 	toString: {
+		/**
+		 * toString override; see translateError
+		 * @return {String} [description]
+		 */
 		value: function(){
 			return this.translateError();
 		}
 	},
 
 	translateError: {
+		/**
+		 * Translates error into a friendly message
+		 * @return {String} [description]
+		 */
 		value: function() {
 
-			var predefined = chrome.i18n.getMessage("application_error_code_" + this.code);
+			var predefined = Application.getLocaleMessage(
+				"application_error_code_" + this.code);
 
 			if(predefined !== ""){
 				return predefined;
@@ -454,13 +487,14 @@ Object.defineProperties(Application.Error.prototype, {
 			else if(this.code !== null){
 
 				if(this.code === Application.Error.codes.bungie_net_error){
-					return chrome.i18n.getMessage("application_error_bungie_net", [
+					return Application.getLocaleMessage(
+						"application_error_bungie_net", [
 						this.data.errorCode,
 						this.data.message
 					]);
 				}
 
-				return chrome.i18n.getMessage("application_error_unknown") +
+				return Application.getLocaleMessage("application_error_unknown") +
 					" (" + this.code + ")";
 
 			}
@@ -471,7 +505,7 @@ Object.defineProperties(Application.Error.prototype, {
 				return this.data;
 			}
 
-			return chrome.i18n.getMessage("application_error_unknown");
+			return Application.getLocaleMessage("application_error_unknown");
 
 		}
 	}
@@ -479,15 +513,17 @@ Object.defineProperties(Application.Error.prototype, {
 });
 Object.defineProperties(Application.Error, {
 	codes: {
+		/**
+		 * Application-level error codes
+		 * @type {Object}
+		 */
 		value: {
-
 			not_authenticated: 1,
 			bungie_net_error: 2,
 			chrome_storage_sync_error: 3,
 			chrome_storage_local_error: 4,
 			status_update_failed: 5,
 			imgur_upload_failed: 6,
-
 		}
 	}
 });
@@ -498,6 +534,10 @@ Object.defineProperties(Application, { constants: {
 Object.defineProperties(Application.constants, {
 
 	storageKeys: {
+		/**
+		 * Key names for storing data
+		 * @type {Object}
+		 */
 		value: {
 			themeName: "sync_themeName",
 			emojiSupport: "sync_emojiEnabled",
@@ -506,6 +546,10 @@ Object.defineProperties(Application.constants, {
 	},
 
 	themes: {
+		/**
+		 * Key names for themes
+		 * @type {Object}
+		 */
 		value: {
 			light: "light",
 			dark: "dark"
@@ -513,6 +557,10 @@ Object.defineProperties(Application.constants, {
 	},
 
 	alarmKeys: {
+		/**
+		 * Key names for Chrome alarms
+		 * @type {Object}
+		 */
 		value: {
 			statusUpdates: "chrome_alarm_statusUpdates"
 		}

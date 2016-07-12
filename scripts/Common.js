@@ -161,7 +161,7 @@ var Common = {
 		else{
 			str = chrome.i18n.getMessage("application_error_unknown");
 		}
-		
+
 		Common.displayMessage(Cola.functions.string.htmlEncode(str));
 
   },
@@ -179,6 +179,10 @@ var Common = {
 	},
 
 	getAttention: () => {
+		/**
+		 * Get user's attention through taskbar flashing. This should
+		 * be called from an individual window's context
+		 */
 		return new Promise((resolve) => {
 			chrome.windows.update(
 				chrome.windows.WINDOW_ID_CURRENT, {

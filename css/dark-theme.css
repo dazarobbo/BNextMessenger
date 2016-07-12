@@ -73,15 +73,17 @@ body{
 }
 
 .side-nav li:hover{
-
+	background-color: #fff;
 }
 
 .side-nav li:hover > i{
 	color: #000 !important;
+	background-color: inherit;
 }
 
 .side-nav li:hover > a{
 	color: #000 !important;
+	background-color: inherit;
 }
 
 span.spoiler{

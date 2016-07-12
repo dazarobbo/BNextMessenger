@@ -14,7 +14,7 @@ chrome.runtime.onInstalled.addListener((details) => {
   obj[Application.constants.storageKeys.statusUpdates] = false;
 
   Application.log("Storage defaults installed");
-  chrome.storage.sync.set(obj);
+  chrome.storage.sync.set(obj); //TODO: what about errors?
 
   //Set uninstall URL
   chrome.runtime.setUninstallURL(

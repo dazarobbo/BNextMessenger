@@ -77,11 +77,11 @@ body{
 }
 
 .side-nav li:hover > i{
-
+	background-color: inherit;
 }
 
 .side-nav li:hover > a{
-
+	background-color: inherit;
 }
 
 span.spoiler{

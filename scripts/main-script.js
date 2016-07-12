@@ -25,6 +25,12 @@ var navItems = [
 ];
 
 
+/**
+ * [formatBuddy description]
+ * @param  {[type]} u [description]
+ * @return {[type]}   [description]
+ * @deprecated
+ */
 function formatBuddy(u){
 	return new Promise((resolve) => {
 
@@ -295,6 +301,11 @@ function loadGroupMessages(){
 	});
 }
 
+/**
+ * [loadBuddies description]
+ * @return {[type]} [description]
+ * @deprecated
+ */
 function loadBuddies(){
 	return new Promise((resolve, reject) => {
 

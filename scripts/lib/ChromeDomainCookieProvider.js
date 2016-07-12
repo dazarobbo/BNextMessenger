@@ -1,9 +1,17 @@
 (function(__scope) {
 	"use strict";
 
-	var provider = function(){ };
+
+	var provider = function(domain){
+    this.domain = domain;
+  };
 
 	Object.defineProperties(provider.prototype, {
+
+    domain: {
+			value: null,
+			writable: true
+    },
 
 		get: {
 			value: function(name) {
@@ -14,7 +22,7 @@
 		getAll: {
 			value: function() {
 				return new Promise(resolve => {
-					chrome.cookies.getAll({}, (cookies) => {
+					chrome.cookies.getAll({ domain: this.domain }, (cookies) => {
 						return resolve(Array.from(cookies));
 					});
 				});
@@ -31,6 +39,6 @@
 
 	});
 
-	__scope.CookieProvider = provider;
-	
+
+	__scope.ChromeDomainCookieProvider = provider;
 })(this);
