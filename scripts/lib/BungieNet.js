@@ -2412,7 +2412,7 @@
 						.setSearch(endpoint.search(true));
 
 				//URI.js will not retain the ending forward slash, so add
-				//it in manually.
+				//it in manually
 				//
 				//requests will still be successful without it, but only
 				//after redirects - best to avoid this
@@ -2449,6 +2449,7 @@
 								return resolve(BungieNet.Platform.Response.parse(obj));
 
 							}, reject);
+
 					});
 				});
 
