@@ -27,6 +27,7 @@
 ((__scope) => {
 	"use strict";
 
+
 	var BungieNet = { };
 	Object.defineProperties(BungieNet, {
 
@@ -2407,13 +2408,14 @@
 
 				//construct full URI and copy querystring
 				var fullUri = BungieNet.platformPath
-						.segment(this._getNamespace())
 						.segment(endpoint.path())
 						.setSearch(endpoint.search(true));
 
-				//TODO: fix up the slashes, because this is going to become
-				//problematic at some point
-				//maybe just have the whole endpoint specified in the servies
+				//URI.js will not retain the ending forward slash, so add
+				//it in manually.
+				//
+				//requests will still be successful without it, but only
+				//after redirects - best to avoid this
 				if(!fullUri.path().endsWith("/")){
 					fullUri.path(fullUri.path() + "/");
 				}
@@ -2465,7 +2467,7 @@
 
 						getUsersFollowed: function() {
 							return this._serviceRequest(new URI(
-									"Following/Users/"));
+									"Activity/Following/Users/"));
 						}
 
 					}),
@@ -2475,7 +2477,7 @@
 
 						createConversation: function(membersToId, body) {
 							return this._serviceRequest(
-								new URI("CreateConversation/"),
+								new URI("Message/CreateConversation/"),
 								"POST",
 								{
 									membersToId: membersToId,
@@ -2486,14 +2488,14 @@
 
 						getConversationsV5: function(page) {
 							return this._serviceRequest(URI.expand(
-								"GetConversationsV5/{page}/", {
+								"Message/GetConversationsV5/{page}/", {
 								page: page
 							}));
 						},
 
 						getConversationByIdV2: function(id) {
 							return this._serviceRequest(URI.expand(
-								"GetConversationByIdV2/{id}/", {
+								"Message/GetConversationByIdV2/{id}/", {
 								id: id
 							}));
 						},
@@ -2511,7 +2513,7 @@
 							before = before || bigInt(2).pow(64 - 1).minus(1);
 
 							var uri = URI.expand(
-								"GetConversationThreadV3/{id}/{page}/", {
+								"Message/GetConversationThreadV3/{id}/{page}/", {
 								id: id,
 								page: page
 							});
@@ -2525,21 +2527,21 @@
 
 						getConversationWithMemberIdV2: function(mId) {
 							return this._serviceRequest(URI.expand(
-								"/GetConversationWithMemberV2/{id}/", {
+								"Message/GetConversationWithMemberV2/{id}/", {
 								id: mId
 							}));
 						},
 
 						getGroupConversations: function(page) {
 							return this._serviceRequest(URI.expand(
-								"GetGroupConversations/{page}/", {
+								"Message/GetGroupConversations/{page}/", {
 								page: page
 							}));
 						},
 
 						leaveConversation: function(conversationId){
 							return this._serviceRequest(URI.expand(
-								"LeaveConversation/{id}/", {
+								"Message/LeaveConversation/{id}/", {
 									id: conversationId
 								}
 							));
@@ -2547,7 +2549,7 @@
 
 						saveMessageV3: function(body, conversationId) {
 							return this._serviceRequest(
-								new URI("SaveMessageV3/"),
+								new URI("Message/SaveMessageV3/"),
 								"POST",
 								{
 									body: body,
@@ -2557,7 +2559,7 @@
 
 						userIsTyping: function(conversationId) {
 							return this._serviceRequest(
-									new URI("UserIsTyping/"),
+									new URI("Message/UserIsTyping/"),
 									"POST",
 									{
 										conversationId: conversationId
@@ -2571,17 +2573,17 @@
 
 						getAvailableAvatars: function() {
 							return this._serviceRequest(new URI(
-									"GetAvailableAvatars/"));
+									"User/GetAvailableAvatars/"));
 						},
 
 						getAvailableThemes: function() {
 							return this._serviceRequest(new URI(
-									"GetAvailableThemes/"));
+									"User/GetAvailableThemes/"));
 						},
 
 						getBungieAccount: function(membershipType, membershipId) {
 							return this._serviceRequest(URI.expand(
-									"GetBungieAccount/{membershipType}/{membershipId}/", {
+									"User/GetBungieAccount/{membershipType}/{membershipId}/", {
 										membershipType: membershipType,
 										membershipId: membershipId
 									}));
@@ -2589,17 +2591,17 @@
 
 						getCountsForCurrentUser: function() {
 							return this._serviceRequest(new URI(
-									"GetCounts/"));
+									"User/GetCounts/"));
 						},
 
 						getCurrentUser: function() {
 							return this._serviceRequest(new URI(
-									"GetBungieNetUser/"));
+									"User/GetBungieNetUser/"));
 						},
 
 						updateUser: function(opts) {
 							return this._serviceRequest(new URI(
-									"UpdateUser/"), "POST", opts);
+									"User/UpdateUser/"), "POST", opts);
 						}
 
 					})
