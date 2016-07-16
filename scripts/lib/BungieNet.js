@@ -2466,6 +2466,10 @@
 					//Activity service
 					activity: new BungieNet.Platform.Service("Activity", platform, {
 
+						/**
+						 * Get the users this user follows
+						 * @return {Promise}
+						 */
 						getUsersFollowed: function() {
 							return this._serviceRequest(new URI(
 									"Activity/Following/Users/"));
@@ -2476,6 +2480,12 @@
 					//Message service
 					message: new BungieNet.Platform.Service("Message", platform, {
 
+						/**
+						 * Create a conversation with text and recipients
+						 * @param  {Array} membersToId array of member IDs
+						 * @param  {String} body	initial message text
+						 * @return {Promise}
+						 */
 						createConversation: function(membersToId, body) {
 							return this._serviceRequest(
 								new URI("Message/CreateConversation/"),
@@ -2487,6 +2497,11 @@
 							);
 						},
 
+						/**
+						 * Get a list of conversations
+						 * @param  {Number} page conversation page
+						 * @return {Promise}
+						 */
 						getConversationsV5: function(page) {
 							return this._serviceRequest(URI.expand(
 								"Message/GetConversationsV5/{page}/", {
@@ -2494,6 +2509,11 @@
 							}));
 						},
 
+						/**
+						 * Get an individual conversation by id
+						 * @param  {Number} id conversation id
+						 * @return {Promise}
+						 */
 						getConversationByIdV2: function(id) {
 							return this._serviceRequest(URI.expand(
 								"Message/GetConversationByIdV2/{id}/", {
@@ -2503,11 +2523,11 @@
 
 						/**
 						 * Get an individual conversation
-						 * @param  {Number} id     [description]
-						 * @param  {Number} page   [description]
-						 * @param  {BigInteger} after  [description]
-						 * @param  {BigInteger} before [description]
-						 * @return {Promise}        [description]
+						 * @param  {Number} id     conversation id
+						 * @param  {Number} page   page number
+						 * @param  {BigInteger} after	ticks
+						 * @param  {BigInteger} before ticks
+						 * @return {Promise}
 						 */
 						getConversationThreadV3: function(id, page, after, before) {
 							after = after || bigInt.zero;
@@ -2526,6 +2546,11 @@
 
 						},
 
+						/**
+						 * Get the conversation with a given member ID
+						 * @param  {Number} mId member ID
+						 * @return {Promise}
+						 */
 						getConversationWithMemberIdV2: function(mId) {
 							return this._serviceRequest(URI.expand(
 								"Message/GetConversationWithMemberV2/{id}/", {
@@ -2533,6 +2558,11 @@
 							}));
 						},
 
+						/**
+						 * Get group conversations
+						 * @param  {Number} page
+						 * @return {Promise}
+						 */
 						getGroupConversations: function(page) {
 							return this._serviceRequest(URI.expand(
 								"Message/GetGroupConversations/{page}/", {
@@ -2540,6 +2570,11 @@
 							}));
 						},
 
+						/**
+						 * Leave a given conversation
+						 * @param  {Number} conversationId the conversation to leave
+						 * @return {Promise}
+						 */
 						leaveConversation: function(conversationId){
 							return this._serviceRequest(URI.expand(
 								"Message/LeaveConversation/{id}/", {
@@ -2548,6 +2583,12 @@
 							));
 						},
 
+						/**
+						 * Add a message to the conversation
+						 * @param  {String} body message text
+						 * @param  {Number} conversationId conversation ID
+						 * @return {Promise}
+						 */
 						saveMessageV3: function(body, conversationId) {
 							return this._serviceRequest(
 								new URI("Message/SaveMessageV3/"),
@@ -2555,16 +2596,23 @@
 								{
 									body: body,
 									conversationId: conversationId
-								});
+								}
+							);
 						},
 
+						/**
+						 * Notify bungie.net this user is typing
+						 * @param  {Number} conversationId conversation ID
+						 * @return {Promise}
+						 */
 						userIsTyping: function(conversationId) {
 							return this._serviceRequest(
 									new URI("Message/UserIsTyping/"),
 									"POST",
 									{
 										conversationId: conversationId
-									});
+									}
+								);
 						}
 
 					}),
@@ -2572,37 +2620,69 @@
 					//User service
 					user: new BungieNet.Platform.Service("User", platform, {
 
+						/**
+						 * Get the available avatars for this user
+						 * @return {Promise}
+						 */
 						getAvailableAvatars: function() {
 							return this._serviceRequest(new URI(
 									"User/GetAvailableAvatars/"));
 						},
 
+						/**
+						 * Get the available themes for this user
+						 * @return {Promise}
+						 */
 						getAvailableThemes: function() {
 							return this._serviceRequest(new URI(
 									"User/GetAvailableThemes/"));
 						},
 
+						/**
+						 * Get the account given the id and type
+						 * @param  {BungieNet.enums.bungieMembershipType} membershipType
+						 * @param  {Number} membershipId	membership ID
+						 * @return {Promise}
+						 */
 						getBungieAccount: function(membershipType, membershipId) {
 							return this._serviceRequest(URI.expand(
-									"User/GetBungieAccount/{membershipType}/{membershipId}/", {
-										membershipType: membershipType,
-										membershipId: membershipId
-									}));
+								"User/GetBungieAccount/{membershipType}/{membershipId}/", {
+									membershipType: membershipType,
+									membershipId: membershipId
+								}
+							));
 						},
 
+						/**
+						 * Gets the number of notifications for the user
+						 * @deprecated
+						 * @return {Promise}
+						 */
 						getCountsForCurrentUser: function() {
 							return this._serviceRequest(new URI(
 									"User/GetCounts/"));
 						},
 
+						/**
+						 * Get the current user's details
+						 * @return {Promise}
+						 */
 						getCurrentUser: function() {
 							return this._serviceRequest(new URI(
 									"User/GetBungieNetUser/"));
 						},
 
+						/**
+						 * Update the user's profile with the given options
+						 * @param  {Object} opts user details to update
+						 * @return {Promise}
+						 */
 						updateUser: function(opts) {
-							return this._serviceRequest(new URI(
-									"User/UpdateUser/"), "POST", opts);
+							return this._serviceRequest(
+								new URI("User/UpdateUser/"),
+								"POST",
+								opts
+							);
 						}
 
 					})
