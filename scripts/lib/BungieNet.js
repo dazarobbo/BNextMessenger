@@ -2420,15 +2420,15 @@
 	};
 	Object.defineProperties(BungieNet.Platform.Service.prototype, {
 
+		/**
+		 * API-level request method
+		 * @param {URI} endpoint
+		 * @param {string} method default is GET
+		 * @param {mixed} data
+		 * @returns {Promise}
+		 */
 		_serviceRequest: {
 			enumerable: false,
-			/**
-			 * API-level request method
-			 * @param {URI} endpoint
-			 * @param {string} method default is GET
-			 * @param {mixed} data
-			 * @returns {Promise}
-			 */
 			value: function(endpoint, method, data) {
 
 				method = method || "GET";
@@ -2439,10 +2439,9 @@
 						.setSearch(endpoint.search(true));
 
 				//URI.js will not retain the ending forward slash, so add
-				//it in manually
-				//
-				//requests will still be successful without it, but only
-				//after redirects - best to avoid this
+				//it in manually. Requests will still be successful without
+				//it, but only after redirects - best to avoid this to reduce
+				//superfluous requests
 				if(!fullUri.path().endsWith("/")){
 					fullUri.path(fullUri.path() + "/");
 				}
@@ -2454,6 +2453,8 @@
 						fullUri.addSearch("lc", loc);
 
 						//invoke the platform bound to this service instance
+						//TODO: perhaps the service request method should be
+						//attached to the platform instance?
 						this._getPlatform()
 							.httpRequest(method, fullUri, JSON.stringify(data))
 							.then((respText) => {
@@ -2486,6 +2487,10 @@
 	});
 	Object.defineProperties(BungieNet.Platform.Service, {
 
+		/**
+		 * Binds a series of services to a given BungieNet.Platform type
+		 * @param {BungieNet.Platform}
+		 */
 		getServices: {
 			value: (platform) => {
 				return {
@@ -2762,11 +2767,11 @@
 
 		//
 
+		/**
+		 * Whether the response is an error
+		 * @return {bool}
+		 */
 		isError: {
-			/**
-			 * Whether the response is an error
-			 * @return {bool}
-			 */
 			get: function() {
 				return this.errorCode !== BungieNet.enums.platformErrorCodes.success;
 			}
@@ -2775,6 +2780,12 @@
 	});
 	Object.defineProperties(BungieNet.Platform.Response, {
 
+		/**
+		 * This method takes an JSON-deserialised object as a response from
+		 * bungie.net and returns a BungieNet.Platform.Response type
+		 * @param {Object} response from bungie.net platform
+		 * @returns {BungieNet.Platform.Response}
+		 */
 		parse: {
 			value: (o) => {
 
@@ -2794,6 +2805,10 @@
 
 	});
 
+	/**
+	 * @deprecated ?
+	 * @return {[type]} [description]
+	 */
 	BungieNet.User = function(){ };
 	Object.defineProperties(BungieNet.User.prototype, {
 
