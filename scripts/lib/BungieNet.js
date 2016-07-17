@@ -2255,6 +2255,26 @@
 	Object.defineProperties(BungieNet.Platform.prototype, {
 
 		/**
+		 * Internal list of XHR requests
+		 * @type {Array}
+		 */
+		requests: {
+			value: [],
+			writable: true
+		},
+
+		/**
+		 * Cancels all current requests
+		 * @type {Object}
+		 */
+		cancelAll: {
+			value: function(){
+				this.requests.forEach((x) => x.abort());
+				this.requests = [];
+			}
+		},
+
+		/**
 		 * Make the HTTP request
 		 * @param {string} method
 		 * @param {URI} uri
@@ -2281,6 +2301,10 @@
 						this._options.onStateChange(xhr);
 
 						if(xhr.readyState === 4){
+
+							//remove from internal arr
+							this.requests = this.requests.filter((x) => x !== xhr);
+
 							if(xhr.status === 200){
 								return resolve(xhr.responseText);
 							}
@@ -2291,6 +2315,7 @@
 									xhr
 								));
 							}
+
 						}
 
 					};
@@ -2309,6 +2334,8 @@
 								})
 						);
 					}
+
+					this.requests.push(xhr);
 
 					//wait for any promises to resolve then fire
 					Promise.all(promises).then(() => {
@@ -2614,6 +2641,13 @@
 									}
 								);
 						}
+
+					}),
+
+					//Notification service
+					notification: new BungieNet.Platform.Service("Notification", platform, {
+
+
 
 					}),
 
