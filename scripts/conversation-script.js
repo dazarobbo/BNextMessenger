@@ -666,11 +666,9 @@ function showDetails(){
 
 //
 
-function updateTitle(count){
+function updateTitle(count = 0){
 	return new Promise((resolve) => {
-
-		count = count || 0;
-
+    
 		var promise;
 
 		if(convDetails.ownerEntityType === BungieNet.enums.entityType.group){

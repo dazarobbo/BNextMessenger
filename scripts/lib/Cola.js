@@ -98,9 +98,7 @@
 		},
 
 		strInArray: {
-			value: (arr, str, caseSensitive) => {
-
-				caseSensitive = caseSensitive || true;
+			value: (arr, str, caseSensitive = true) => {
 
 				if(!caseSensitive){
 					str = str.toLowerCase();
@@ -117,9 +115,7 @@
 		},
 
 		arrayInStr: {
-			value: (keywords, str, caseSensitive) => {
-
-				caseSensitive = caseSensitive || true;
+			value: (keywords, str, caseSensitive = true) => {
 
 				if(!caseSensitive){
 					str = str.toLowerCase();
@@ -361,7 +357,7 @@
 					}
 				}
 
-				return undefined;
+				return void(0);
 
 			}
 		},

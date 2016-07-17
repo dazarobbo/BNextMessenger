@@ -2021,9 +2021,9 @@
 
 	};
 
-	BungieNet.Error = function(code, message, data){
+	BungieNet.Error = function(code, message = null, data = null){
 		this.code = code;
-		this.message = message || null;
+		this.message = message;
 		this.data = data;
 		this.stack = (new Error()).stack;
 	};
@@ -2218,7 +2218,7 @@
 	 * @param  {Object} opts
 	 * @return {BungieNet.Platform}      [description]
 	 */
-	BungieNet.Platform = function(opts) {
+	BungieNet.Platform = function(opts = {}) {
 
 		this._options = {
 			apiKey: "",
@@ -2283,7 +2283,7 @@
 		 */
 		httpRequest: {
 			enumerable: false,
-			value: function(method, uri, data) {
+			value: function(uri, method = "GET", data = void(0)) {
 				return new Promise((resolve, reject) => {
 
 					var promises = [];
@@ -2340,7 +2340,7 @@
 					//wait for any promises to resolve then fire
 					Promise.all(promises).then(() => {
 						this._options.beforeSend(xhr);
-						xhr.send(data ? data : void(0));
+						xhr.send(data);
 					});
 
 				});
@@ -2405,7 +2405,7 @@
 	 * @param  {Object} endpoints method calls
 	 * @return {BungieNet.Platform.Service}
 	 */
-	BungieNet.Platform.Service = function(namespace, platform, endpoints) {
+	BungieNet.Platform.Service = function(namespace, platform, endpoints = {}) {
 
 		this._getNamespace = () => namespace;
 		this._getPlatform = () => platform;
@@ -2429,9 +2429,7 @@
 		 */
 		_serviceRequest: {
 			enumerable: false,
-			value: function(endpoint, method, data) {
-
-				method = method || "GET";
+			value: function(endpoint, method = "GET", data = void(0)) {
 
 				//construct full URI and copy querystring
 				var fullUri = BungieNet.platformPath
@@ -2456,7 +2454,7 @@
 						//TODO: perhaps the service request method should be
 						//attached to the platform instance?
 						this._getPlatform()
-							.httpRequest(method, fullUri, JSON.stringify(data))
+							.httpRequest(fullUri, method, JSON.stringify(data))
 							.then((respText) => {
 
 								var obj;

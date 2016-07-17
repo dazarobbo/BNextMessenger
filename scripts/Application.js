@@ -416,7 +416,7 @@ Object.defineProperties(Application.Dialog.prototype, {
 		 * @param  {Array} arr array of navigation items
 		 * @return {Promise}     [description]
 		 */
-		value: function(arr){
+		value: function(arr = []){
 			return Common.populateNav(arr);
 		}
 	},
@@ -447,9 +447,9 @@ Object.defineProperties(Application.Dialog.prototype, {
 });
 
 Object.defineProperties(Application, { Error: {
-	value: function(code, message, data){
+	value: function(code, message = "", data = null){
 		this.code = code;
-		this.message = message || "";
+		this.message = message;
 		this.data = data;
 		this.stack = (new Error()).stack;
 	}
@@ -711,8 +711,7 @@ Object.defineProperties(Application.Conversation, {
 		 * @param  {Number} page           [description]
 		 * @return {Promise}                [description]
 		 */
-		value: (conversationId, page) => {
-			page = page || 1;
+		value: (conversationId, page = 1) => {
 			return new Promise((resolve, reject) => {
 				Application.getPlatformInstance().then((platform) => {
 					platform.services.message.getConversationThreadV3(conversationId, page).then((resp) => {
@@ -777,8 +776,7 @@ Object.defineProperties(Application.Conversation, {
 		 * @param  {Number} page [description]
 		 * @return {Promise}      [description]
 		 */
-		value: (page) => {
-			page = page || 1;
+		value: (page = 1) => {
 			return new Promise((resolve, reject) => {
 				Application.getPlatformInstance().then((platform) => {
 					platform.services.message.getGroupConversations(page).then((resp) => {
@@ -834,8 +832,7 @@ Object.defineProperties(Application.Conversation, {
 		 * @param  {Number} page [description]
 		 * @return {Promise}      [description]
 		 */
-		value: (page) => {
-			page = page || 1;
+		value: (page = 1) => {
 			return new Promise((resolve, reject) => {
 				Application.getPlatformInstance().then((platform) => {
 					platform.services.message.getConversationsV5(page).then((resp) => {
@@ -873,9 +870,8 @@ Object.defineProperties(Application.Conversation, {
 		 * @param  {string} body      content of the message
 		 * @return {Promise}           new conversation id is returned
 		 */
-		value: (membersTo, body) => {
+		value: (membersTo, body = "") => {
 			return new Promise((resolve, reject) => {
-				body = body || "";
 				Application.getPlatformInstance().then((platform) => {
 					platform.services.message.createConversation(membersTo, body).then((resp) => {
 
@@ -1004,9 +1000,7 @@ Object.defineProperties(Application.Conversation.prototype, {
 		 * @param  {Number} maxLength [description]
 		 * @return {String}           [description]
 		 */
-		value: function(maxLength) {
-
-			maxLength = maxLength || 100;
+		value: function(maxLength = 100) {
 
 			var str = this.getHtmlDecodedBody();
 
@@ -1349,7 +1343,6 @@ Object.defineProperties(Application.User.prototype, {
 		 * @return {Promise} [description]
 		 */
 		value: function() {
-			//var memberId = this.membershipId;
 			return new Promise((resolve) => {
 				BungieNet.getLocaleBase().then((uri) => {
 

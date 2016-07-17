@@ -1,7 +1,7 @@
 
 var Common = {
 
-	populateNav: (items) => {
+	populateNav: (items = []) => {
 		return new Promise((resolve) => {
 
       //{
