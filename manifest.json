@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "__MSG_CHROME_EXT_NAME__",
-	"version": "0.2.3",
+	"version": "0.2.4",
 	"default_locale": "en",
 	"description": "__MSG_CHROME_EXT_DESCRIPTION__",
 	"icons": {
