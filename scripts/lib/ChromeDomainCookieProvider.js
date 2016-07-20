@@ -1,44 +1,29 @@
-(function(__scope) {
-	"use strict";
+class ChromeDomainCookieProvider{
 
+	constructor(domain){
+		this.domain = domain;
+	}
 
-	var provider = function(domain){
-    this.domain = domain;
-  };
+	get(name){
+		return this.getMatching(c => c.name === name);
+	}
 
-	Object.defineProperties(provider.prototype, {
+	getAll(){
+		return new Promise(resolve => {
+			chrome.cookies.getAll({ domain: this.domain }, (cookies) => {
+				return resolve(Array.from(cookies));
+			});
+		});
+	}
 
-    domain: {
-			value: null,
-			writable: true
-    },
+	getMatching(predicate){
+		return new Promise(resolve => {
+			this.getAll().then(cookies => resolve(cookies.filter(predicate)));
+		});
+	}
 
-		get: {
-			value: function(name) {
-				return this.getMatching(c => c.name === name);
-			}
-		},
+	toString(){
+		return `Domain: ${this.domain}`;
+	}
 
-		getAll: {
-			value: function() {
-				return new Promise(resolve => {
-					chrome.cookies.getAll({ domain: this.domain }, (cookies) => {
-						return resolve(Array.from(cookies));
-					});
-				});
-			}
-		},
-
-		getMatching: {
-			value: function(predicate) {
-				return new Promise(resolve => {
-					this.getAll().then(cookies => resolve(cookies.filter(predicate)));
-				});
-			}
-		}
-
-	});
-
-
-	__scope.ChromeDomainCookieProvider = provider;
-})(this);
+}

@@ -40,7 +40,7 @@ Object.defineProperties(Application, {
 		value: () => {
 			return new Promise((resolve) => {
 
-				var p = new BungieNet.Platform({
+				let p = new BungieNet.Platform({
 					apiKey: Application.constants.apiKey
 				});
 
@@ -58,12 +58,12 @@ Object.defineProperties(Application, {
 		value: () => {
 
 			//Could also use Date.now instead
-			var nonceLength = Application.constants.statusUpdateNonceLength;
-			var max = parseInt("9".repeat(nonceLength), 10);
-			var min = parseInt("1" + "0".repeat(nonceLength - 1), 10);
-			var nonce = (Math.random() * (max - min) + min).toFixed(0);
+			let nonceLength = Application.constants.statusUpdateNonceLength;
+			let max = parseInt("9".repeat(nonceLength), 10);
+			let min = parseInt("1" + "0".repeat(nonceLength - 1), 10);
+			let nonce = (Math.random() * (max - min) + min).toFixed(0);
 
-			return "online-" + nonce;
+			return `online-${nonce}`;
 
 		}
 	},
@@ -77,15 +77,15 @@ Object.defineProperties(Application, {
 			return new Promise((resolve, reject) => {
 				chrome.windows.getAll({ populate: true }, (wndws) => {
 
-					var uri = new URI("")
+					let uri = new URI("")
 						.protocol("chrome-extension")
 						.segment(chrome.runtime.id.toString())
-						.segment("main.html")
+						.segment("/html/main.html")
 						.toString()
 						.trim()
 						.toLowerCase();
 
-					var matchedWindows = wndws
+					let matchedWindows = wndws
 						.filter(w => {
 							return w.tabs
 								.filter(t => t.url.trim().toLowerCase().startsWith(uri))
@@ -114,20 +114,19 @@ Object.defineProperties(Application, {
 			return new Promise((resolve, reject) => {
 				chrome.windows.getAll({ populate: true }, (wndws) => {
 
-					var base = new URI("")
+					let base = new URI("")
 						.protocol("chrome-extension")
 						.segment(chrome.runtime.id.toString())
-						.segment("conversation.html")
+						.segment("/html/conversation.html")
 						.toString()
 						.trim()
 						.toLowerCase();
 
-					var matchedWindows = wndws
+					let matchedWindows = wndws
 						.filter(w => {
 							return w.tabs
 								.filter(t => {
-									var uri = new URI(t.url);
-									//TODO: this can probably better make use of URI.js methods
+									let uri = new URI(t.url);
 									return uri.toString().startsWith(base) &&
 										uri.hasQuery("conversationId", convId.toString(), true);
 								}).length > 0;
@@ -159,11 +158,10 @@ Object.defineProperties(Application, {
 	log: {
 		/**
 		 * Log an application-level message
-		 * @param  {mixed} o [description]
-		 * @return {void}   [description]
+		 * @param  {mixed} o
 		 */
 		value: (o) => {
-			console.log(Application.getLongDateFormat(new Date()), o);
+			console.log(o);
 		}
 	},
 
@@ -175,19 +173,19 @@ Object.defineProperties(Application, {
 		 */
 		value: (() => {
 
-			var query_string = { };
-			var query = window.location.search.substring(1);
-			var vars = query.split("&");
+			let query_string = { };
+			let query = window.location.search.substring(1);
+			let vars = query.split("&");
 
-			for(var i = 0; i < vars.length; ++i){
+			for(let i = 0; i < vars.length; ++i){
 
-				var pair = vars[i].split("=");
+				let pair = vars[i].split("=");
 
 				if(typeof query_string[pair[0]] === "undefined"){
 					query_string[pair[0]] = decodeURIComponent(pair[1]);
 				}
 				else if(typeof query_string[pair[0]] === "string"){
-					var arr = [query_string[pair[0]],decodeURIComponent(pair[1])];
+					let arr = [query_string[pair[0]],decodeURIComponent(pair[1])];
 					query_string[pair[0]] = arr;
 				}
 				else{
@@ -268,13 +266,13 @@ Object.defineProperties(Application, {
 		value: (file) => {
 			return new Promise((resolve, reject) => {
 
-				var fd = new FormData();
+				let fd = new FormData();
 				fd.append("image", file);
 
 				$.ajax({
 					url: "https://api.imgur.com/3/image",
 					headers: {
-						"Authorization": "Client-ID " + Application.constants.imgurClientId
+						"Authorization": `Client-ID ${Application.constants.imgurClientId}`
 					},
 					type: "POST",
 					data: fd,
@@ -307,8 +305,8 @@ Object.defineProperties(Application, {
 });
 
 Object.defineProperties(Application, { Dialog: {
-	value: function(windowId){
-		this.windowId = windowId || chrome.windows.WINDOW_ID_NONE;
+	value: function(windowId = chrome.windows.WINDOW_ID_NONE){
+		this.windowId = windowId;
 	}
 }});
 Object.defineProperties(Application.Dialog, {
@@ -475,8 +473,8 @@ Object.defineProperties(Application.Error.prototype, {
 		 */
 		value: function() {
 
-			var predefined = Application.getLocaleMessage(
-				"application_error_code_" + this.code);
+			let predefined = Application.getLocaleMessage(
+				`application_error_code_${this.code}`);
 
 			if(predefined !== ""){
 				return predefined;
@@ -638,10 +636,10 @@ Object.defineProperties(Application.Conversation, {
 		 */
 		value: (result, response) => {
 
-			var conv = new Application.Conversation();
+			let conv = new Application.Conversation();
 
 			//Copy all the properties
-			for(var prop in result.detail){
+			for(let prop in result.detail){
 				conv[prop] = result.detail[prop];
 			}
 
@@ -681,22 +679,24 @@ Object.defineProperties(Application.Conversation, {
 		value: (conversationId) => {
 			return new Promise((resolve, reject) => {
 				Application.getPlatformInstance().then((platform) => {
-					platform.services.message.getConversationByIdV2(conversationId).then((resp) => {
+					platform.getConversationByIdV2(conversationId)
+						.then((resp) => {
 
-						if(resp.isError){
-							return reject(new Application.Error(
-								Application.Error.codes.bungie_net_error,
-								"",
-								resp
-							));
-						}
+							if(resp.isError){
+								return reject(new Application.Error(
+									Application.Error.codes.bungie_net_error,
+									"",
+									resp
+								));
+							}
 
-						var conv = Application.Conversation.parseResult(resp.response, resp.response);
+							let conv = Application.Conversation.parseResult(
+								resp.response, resp.response);
 
-						return resolve({
-							details: conv,
-							response: resp
-						});
+							return resolve({
+								details: conv,
+								response: resp
+							});
 
 					}, reject);
 				});
@@ -714,25 +714,26 @@ Object.defineProperties(Application.Conversation, {
 		value: (conversationId, page = 1) => {
 			return new Promise((resolve, reject) => {
 				Application.getPlatformInstance().then((platform) => {
-					platform.services.message.getConversationThreadV3(conversationId, page).then((resp) => {
+					platform.getConversationThreadV3(conversationId, page)
+						.then((resp) => {
 
-						if(resp.isError){
-							return reject(new Application.Error(
-								Application.Error.codes.bungie_net_error,
-								"",
-								resp
-							));
-						}
+							if(resp.isError){
+								return reject(new Application.Error(
+									Application.Error.codes.bungie_net_error,
+									"",
+									resp
+								));
+							}
 
-						var messages = resp.response.results.map((m) => {
-							var usr = Application.User.parseResult(resp.response.users[m.memberFromId]);
-							return Application.Message.parseResult(m, usr);
-						});
+							let messages = resp.response.results.map((m) => {
+								let usr = Application.User.parseResult(resp.response.users[m.memberFromId]);
+								return Application.Message.parseResult(m, usr);
+							});
 
-						return resolve({
-							messages: messages,
-							response: resp
-						});
+							return resolve({
+								messages: messages,
+								response: resp
+							});
 
 					}, reject);
 				});
@@ -750,19 +751,20 @@ Object.defineProperties(Application.Conversation, {
 		value: (body, conversationId) => {
 			return new Promise((resolve, reject) => {
 				Application.getPlatformInstance().then((platform) => {
-					platform.services.message.saveMessageV3(body, conversationId).then((resp) => {
+					platform.saveMessageV3(body, conversationId)
+						.then((resp) => {
 
-						if(resp.isError){
-							return reject(new Application.Error(
-								Application.Error.codes.bungie_net_error,
-								"",
-								resp
-							));
-						}
+							if(resp.isError){
+								return reject(new Application.Error(
+									Application.Error.codes.bungie_net_error,
+									"",
+									resp
+								));
+							}
 
-						return resolve({
-							response: resp
-						});
+							return resolve({
+								response: resp
+							});
 
 					}, reject);
 				});
@@ -779,46 +781,47 @@ Object.defineProperties(Application.Conversation, {
 		value: (page = 1) => {
 			return new Promise((resolve, reject) => {
 				Application.getPlatformInstance().then((platform) => {
-					platform.services.message.getGroupConversations(page).then((resp) => {
+					platform.getGroupConversations(page)
+						.then((resp) => {
 
-						if(resp.isError){
-							return reject(new Application.Error(
-								Application.Error.codes.bungie_net_error,
-								"",
-								resp
-							));
-						}
+							if(resp.isError){
+								return reject(new Application.Error(
+									Application.Error.codes.bungie_net_error,
+									"",
+									resp
+								));
+							}
 
-						var groups = Object.keys(resp.response.groups).map((gId) => {
-							return Application.Group.parseResult(resp.response.groups[gId]);
-						});
+							let groups = Object.keys(resp.response.groups).map((gId) => {
+								return Application.Group.parseResult(resp.response.groups[gId]);
+							});
 
-						var users = Object.keys(resp.response.users).map((id) => {
-							return Application.User.parseResult(resp.response.users[id]);
-						});
+							let users = Object.keys(resp.response.users).map((id) => {
+								return Application.User.parseResult(resp.response.users[id]);
+							});
 
-						var conversations = resp.response.results.map((result) => {
+							let conversations = resp.response.results.map((result) => {
 
-							var c = Application.Conversation.parseResult(result, resp.reasponse);
+								let c = Application.Conversation.parseResult(result, resp.reasponse);
 
-							//Grab the last user
-							c.participants.push(users
-								.filter(u => u.membershipId == c.memberFromId)[0]);
+								//Grab the last user
+								c.participants.push(users
+									.filter(u => u.membershipId == c.memberFromId)[0]);
 
-							//Grab the group
-							c.group = groups
-								.filter(g => g.conversationId == c.conversationId)[0];
+								//Grab the group
+								c.group = groups
+									.filter(g => g.conversationId == c.conversationId)[0];
 
-							return c;
+								return c;
 
-						});
+							});
 
-						return resolve({
-							conversations: conversations,
-							groups: groups,
-							users: users,
-							response: resp
-						});
+							return resolve({
+								conversations: conversations,
+								groups: groups,
+								users: users,
+								response: resp
+							});
 
 					}, reject);
 				});
@@ -835,27 +838,28 @@ Object.defineProperties(Application.Conversation, {
 		value: (page = 1) => {
 			return new Promise((resolve, reject) => {
 				Application.getPlatformInstance().then((platform) => {
-					platform.services.message.getConversationsV5(page).then((resp) => {
+					platform.getConversationsV5(page)
+						.then((resp) => {
 
-						if(resp.isError){
-							return reject(new Application.Error(
-								Application.Error.codes.bungie_net_error,
-								"",
-								resp
-							));
-						}
+							if(resp.isError){
+								return reject(new Application.Error(
+									Application.Error.codes.bungie_net_error,
+									"",
+									resp
+								));
+							}
 
-						var conversations = [];
+							let conversations = [];
 
-						resp.response.results.forEach((result) => {
-							conversations.push(Application.Conversation.parseResult(
-								result, resp.response));
-						});
+							resp.response.results.forEach((result) => {
+								conversations.push(Application.Conversation.parseResult(
+									result, resp.response));
+							});
 
-						return resolve({
-							conversations: conversations,
-							response: resp
-						});
+							return resolve({
+								conversations: conversations,
+								response: resp
+							});
 
 					}, reject);
 				});
@@ -873,22 +877,23 @@ Object.defineProperties(Application.Conversation, {
 		value: (membersTo, body = "") => {
 			return new Promise((resolve, reject) => {
 				Application.getPlatformInstance().then((platform) => {
-					platform.services.message.createConversation(membersTo, body).then((resp) => {
+					platform.createConversation(membersTo, body)
+						.then((resp) => {
 
-						if(resp.isError){
-							return reject(new Application.Error(
-								Application.Error.codes.bungie_net_error,
-								"",
-								resp
-							));
-						}
+							if(resp.isError){
+								return reject(new Application.Error(
+									Application.Error.codes.bungie_net_error,
+									"",
+									resp
+								));
+							}
 
-						var conversationId = parseInt(resp.response, 10);
+							let conversationId = parseInt(resp.response, 10);
 
-						return resolve({
-							conversationId: conversationId,
-							resp: resp
-						});
+							return resolve({
+								conversationId: conversationId,
+								resp: resp
+							});
 
 					}, reject);
 				});
@@ -900,19 +905,20 @@ Object.defineProperties(Application.Conversation, {
 		value: (conversationId) => {
 			return new Promise((resolve, reject) => {
 				Application.getPlatformInstance().then((platform) => {
-					platform.services.message.leaveConversation(conversationId).then((resp) => {
+					platform.leaveConversation(conversationId)
+						.then((resp) => {
 
-						if(resp.isError){
-							return reject(new Application.Error(
-								Application.Error.codes.bungie_net_error,
-								"",
-								resp
-							));
-						}
+							if(resp.isError){
+								return reject(new Application.Error(
+									Application.Error.codes.bungie_net_error,
+									"",
+									resp
+								));
+							}
 
-						return resolve({
-							resp: resp
-						});
+							return resolve({
+								resp: resp
+							});
 
 					}, reject);
 				});
@@ -944,7 +950,7 @@ Object.defineProperties(Application.Conversation.prototype, {
 		 * @return {User} [description]
 		 */
 		value: function() {
-			var arr = this.participants
+			let arr = this.participants
 				.filter(u => u.membershipId === this.memberFromId);
 			return arr.length > 0 ? arr[0] : null;
 		}
@@ -956,7 +962,7 @@ Object.defineProperties(Application.Conversation.prototype, {
 		 * @return {User} [description]
 		 */
 		value: function() {
-			var arr = this.participants
+			let arr = this.participants
 				.filter(u => u.membershipId === this.starter);
 			return arr.length > 0 ? arr[0] : null;
 		}
@@ -968,7 +974,7 @@ Object.defineProperties(Application.Conversation.prototype, {
 		 * @return {User} [description]
 		 */
 		value: function() {
-			var arr = this.participants
+			let arr = this.participants
 				.filter(u => u.membershipId === this.targetMembershipId);
 			return arr.length > 0 ? arr[0] : null;
 		}
@@ -990,7 +996,7 @@ Object.defineProperties(Application.Conversation.prototype, {
 		 * @return {String} [description]
 		 */
 		value: function() {
-			return Cola.functions.string.htmlDecode(this.body);
+			return Cola.String.htmlEncode(this.body);
 		}
 	},
 
@@ -1002,10 +1008,10 @@ Object.defineProperties(Application.Conversation.prototype, {
 		 */
 		value: function(maxLength = 100) {
 
-			var str = this.getHtmlDecodedBody();
+			let str = this.getHtmlDecodedBody();
 
 			if(str.length > maxLength){
-				return str.substring(0, maxLength) + "...";
+				return `${ str.substring(0, maxLength) }...`;
 			}
 
 			return str;
@@ -1028,10 +1034,10 @@ Object.defineProperties(Application.Group, {
 		 */
 		value: (result) => {
 
-			var g = new Application.Group();
+			let g = new Application.Group();
 
 			//Copy values
-			for(var prop in result){
+			for(let prop in result){
 				g[prop] = result[prop];
 			}
 
@@ -1076,7 +1082,7 @@ Object.defineProperties(Application.Group.prototype, {
 			return new Promise((resolve) => {
 				BungieNet.getLocaleBase().then((base) => {
 
-					var link = base
+					let link = base
 						.segment("Clan")
 						.segment("Forum")
 						.segment(this.groupId.toString());
@@ -1097,7 +1103,7 @@ Object.defineProperties(Application.Group.prototype, {
 			return new Promise((resolve) => {
 				BungieNet.getLocaleBase().then((base) => {
 
-					var link = base
+					let link = base
 						.segment("Clan")
 						.segment("Forum")
 						.segment(this.groupId.toString())
@@ -1128,9 +1134,9 @@ Object.defineProperties(Application.Message, {
 		 */
 		value: (result, user) => {
 
-			var msg = new Application.Message();
+			let msg = new Application.Message();
 
-			for(var prop in result){
+			for(let prop in result){
 				if(result.hasOwnProperty(prop)){
 					msg[prop] = result[prop];
 				}
@@ -1162,7 +1168,7 @@ Object.defineProperties(Application.Message.prototype, {
 
 	getRawBody: {
 		value: function() {
-			return Cola.functions.string.htmlDecode(this.body);
+			return Cola.String.htmlDecode(this.body);
 		}
 	},
 
@@ -1187,9 +1193,9 @@ Object.defineProperties(Application.User, {
 		 */
 		value: (result) => {
 
-			var u = new Application.User();
+			let u = new Application.User();
 
-			for(var prop in result){
+			for(let prop in result){
 				u[prop] = result[prop];
 			}
 
@@ -1215,21 +1221,22 @@ Object.defineProperties(Application.User, {
 		value: () => {
 			return new Promise((resolve, reject) => {
 				Application.getPlatformInstance().then((platform) => {
-					platform.services.activity.getUsersFollowed().then((resp) => {
+					platform.getUsersFollowed()
+						.then((resp) => {
 
-						if(resp.isError){
-							return reject(new Application.Error(
-								Application.Error.codes.bungie_net_error,
-								"",
-								resp
-							));
-						}
+							if(resp.isError){
+								return reject(new Application.Error(
+									Application.Error.codes.bungie_net_error,
+									"",
+									resp
+								));
+							}
 
-						var users = resp.response.results.map((u) => {
-							return Application.User.parseResult(u.user);
-						});
+							let users = resp.response.results.map((u) => {
+								return Application.User.parseResult(u.user);
+							});
 
-						return resolve(users);
+							return resolve(users);
 
 					}, reject);
 				});
@@ -1245,9 +1252,9 @@ Object.defineProperties(Application.User, {
 		 */
 		value: (text) => {
 			return new Promise((resolve, reject) => {
-				var opts = { statusText: text };
+				let opts = { statusText: text };
 				Application.getPlatformInstance().then((platform) => {
-					platform.services.user.updateUser(opts).then((resp) => {
+					platform.updateUser(opts).then((resp) => {
 
 						if(resp.isError){
 							return reject(new Application.Error(
@@ -1268,7 +1275,7 @@ Object.defineProperties(Application.User, {
 	isAuthenticated: {
 		value: () => {
 			return new Promise((resolve, reject) => {
-				BungieNet.currentUser.authenticated().then(resolve, reject);
+				BungieNet.CurrentUser.authenticated().then(resolve, reject);
 			});
 		}
 	}
@@ -1278,7 +1285,7 @@ Object.defineProperties(Application.User.prototype, {
 
 	getHtmlDecodedAbout: {
 		value: function() {
-			return Cola.functions.string.htmlDecode(this.about);
+			return Cola.String.htmlDecode(this.about);
 		}
 	},
 
@@ -1299,7 +1306,7 @@ Object.defineProperties(Application.User.prototype, {
 		 */
 		value: function() {
 
-			var uri = new URI(this.profilePicturePath);
+			let uri = new URI(this.profilePicturePath);
 
 			if(uri.is("relative")){
 				uri = BungieNet.base.resource(uri.resource());
@@ -1317,7 +1324,7 @@ Object.defineProperties(Application.User.prototype, {
 		 */
 		value: function() {
 
-			var dates = [
+			let dates = [
 				this.firstAccess,
 				this.lastUpdate,
 				this.statusDate
@@ -1364,7 +1371,7 @@ Object.defineProperties(Application.User.prototype, {
 		 * @return {String} [description]
 		 */
 		value: function() {
-			return Cola.functions.string.htmlDecode(this.statusText);
+			return Cola.String.htmlDecode(this.statusText);
 		}
 	}
 

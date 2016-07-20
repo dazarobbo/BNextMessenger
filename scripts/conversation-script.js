@@ -46,30 +46,30 @@ function hideMoreArrow(){
 
 function formatBody(html){
 
-	return Promise.resolve(Cola.functions.string.htmlEncode(html))
+	return Promise.resolve(Cola.String.htmlEncode(html))
 		.then((str) => {
 
 			//Basic replacements
 			str = str.replace(/\[b\](.*?)\[\/b\]/ig, (_, txt) => {
-				return "<b>" + txt + "</b>";
+				return `<b>${txt}</b>`;
 			});
 
 			str = str.replace(/\[i\](.*?)\[\/i\]/ig, (_, txt) => {
-				return "<i>" + txt + "<i>";
+				return `<i>${txt}<i>`;
 			});
 
 			str = str.replace(/\[u\](.*?)\[\/u\]/ig, (_, txt) => {
-				return "<u>" + txt + "</u>";
+				return `<u>${txt}</u>`;
 			});
 
 			//Don't loop this!
 			//Only allow one [quote]text[/quote] nesting
 			str = str.replace(/\[quote\](.*?)\[\/quote\]/igm, (_, txt) => {
-				return "<blockquote>" + txt + "</blockquote>";
+				return `<blockquote>${txt}</blockquote>`;
 			});
 
 			str = str.replace(/\[spoiler\]([\s\S]*?)\[\/spoiler\]/ig, (_, txt) => {
-				return "<span class=\"spoiler\">" + txt + "</span>";
+				return `<span class="spoiler">${txt}</span>`;
 			});
 
 			//Condense extraneous lines
@@ -82,13 +82,13 @@ function formatBody(html){
 		.then((str) => {
 
 			//Hyperlinks
-			var regex = /(\bhttps?:\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+			let regex = /(\bhttps?:\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
 
 			str = str.replace(regex, (_, p1) => {
 				return $("<a>").attr({
-					href: Cola.functions.string.htmlEncode(encodeURI(p1)),
+					href: Cola.String.htmlEncode(encodeURI(p1)),
 					target: "_blank",
-					title: Cola.functions.string.htmlEncode(p1)
+					title: Cola.String.htmlEncode(p1)
 				}).text(p1)[0].outerHTML;
 			});
 
@@ -99,16 +99,16 @@ function formatBody(html){
 			return new Promise((resolve) => {
 
 				//TODO: This regex is too loose!
-				var regex = /@([^\s]{1,25})/ig;
-				var matches = (() => {
-					var m;
-					var arr = [];
+				let regex = /@([^\s]{1,25})/ig;
+				let matches = (() => {
+					let m;
+					let arr = [];
 					while((m = regex.exec(str))){
 						arr.push(m[1]);
 					}
 					return arr;
 				})();
-				var promises = [];
+				let promises = [];
 
 				//if there are no matches just exit
 				if(matches.length === 0){
@@ -125,14 +125,14 @@ function formatBody(html){
 					.filter((v, i, arr) => arr.indexOf(v) === i)
 					.map((username) => {
 
-						var participantMatches = convDetails.participants
+						let participantMatches = convDetails.participants
 							.filter(u => u.displayName.toLocaleLowerCase() === username);
 
 						if(participantMatches.length > 0){
 							return participantMatches[0];
 						}
 
-						var messageMatches = messages
+						let messageMatches = messages
 							.map(record => record.msg.sender)
 							.filter(u => u.displayName.toLocaleLowerCase() === username);
 
@@ -161,7 +161,7 @@ function formatBody(html){
 
 					str = str.replace(regex, (match, name) => {
 
-						var theUser = users.filter((u) => {
+						let theUser = users.filter((u) => {
 							return u.user.displayName.toLocaleLowerCase() === name.toLocaleLowerCase();
 						})[0];
 
@@ -170,10 +170,10 @@ function formatBody(html){
 							return match;
 						}
 
-						var anchor = $("<a>").attr({
+						let anchor = $("<a>").attr({
 							target: "_blank",
-							href:  Cola.functions.string.htmlEncode(encodeURI(theUser.profileLink)),
-							title: Cola.functions.string.htmlEncode(theUser.user.displayName)
+							href:  Cola.String.htmlEncode(encodeURI(theUser.profileLink)),
+							title: Cola.String.htmlEncode(theUser.user.displayName)
 						})
 						.text("@" + theUser.user.displayName);
 
@@ -193,11 +193,11 @@ function formatBody(html){
 				BungieNet.getLocaleBase().then((base) => {
 
 					//#tag
-					var regex = /(\#([a-zA-Z\u00C0-\u017F\u01FA-\u0217][a-zA-Z\u00C0-\u017F\u01FA-\u0217_0-9]{2,29}))(?!.*?\[\/(url|google)\])/gi;
+					let regex = /(\#([a-zA-Z\u00C0-\u017F\u01FA-\u0217][a-zA-Z\u00C0-\u017F\u01FA-\u0217_0-9]{2,29}))(?!.*?\[\/(url|google)\])/gi;
 
 					str = str.replace(regex, (match, _, tag) => {
 
-						var href = base
+						let href = base
 							.segment("Forum")
 							.segment("Topics")
 							.segment("0") //page
@@ -206,14 +206,14 @@ function formatBody(html){
 							.segment(tag.toLocaleLowerCase())
 							.toString();
 
-						var anchor = $("<a>")
+						let anchor = $("<a>")
 							//.css({ fontWeight: "bold" })
 							.attr({
 								target: "_blank",
-								href:  Cola.functions.string.htmlEncode(href),
-								title: "#" + Cola.functions.string.htmlEncode(tag.toLocaleLowerCase())
+								href:  Cola.String.htmlEncode(href),
+								title: `#${Cola.String.htmlEncode(tag.toLocaleLowerCase())}`
 							})
-							.text("#" + tag.toLocaleLowerCase());
+							.text(`#${tag.toLocaleLowerCase()}`);
 
 						return anchor[0].outerHTML;
 
@@ -228,8 +228,8 @@ function formatBody(html){
 			return new Promise((resolve) => {
 				Application.getSyncValue(Application.constants.storageKeys.emojiSupport).then((doEmoji) => {
 
-					var regex = /^([\uE000-\uF8FF]|\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDDFF])$/;
-					var onlyEmoji = regex.test(str.trim());
+					let regex = /^([\uE000-\uF8FF]|\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDDFF])$/;
+					let onlyEmoji = regex.test(str.trim());
 
 					if(doEmoji){
 
@@ -256,7 +256,7 @@ function formatBody(html){
 function formatMessage(m){
 	return new Promise((resolve) => {
 
-		var li = $("#messageTemplate").find("li").clone();
+		let li = $("#messageTemplate").find("li").clone();
 
 		li.find("img").attr("src", m.sender.getAvatarLink());
 		li.find("span").text(m.sender.displayName);
@@ -264,10 +264,10 @@ function formatMessage(m){
 			.attr("title", Application.getLongDateFormat(m.dateSent))
 			.text((() => {
 
-				var yesterday = new Date();
+				let yesterday = new Date();
 				yesterday.setDate(yesterday.getDate() - 1);
 
-				var options = {
+				let options = {
 					hour12: true
 				};
 
@@ -302,10 +302,10 @@ function getMessagePage(page){
 
 function getNewMessages(){
 	return new Promise((resolve, reject) => {
-		getMessagePage(0).then((appResp) => {
+		getMessagePage(1).then((appResp) => {
 
 			//find the existing last id seen
-			var lastId = messages.length > 0 ?
+			let lastId = messages.length > 0 ?
 				messages
 					.map(record => record.msg.messageId)
 					.reduce((a, b) => Math.max(a, b), -1)
@@ -334,7 +334,7 @@ function getNewMessages(){
 			});
 
 			//return only the new messages
-			var ret = appResp.messages.filter(m => m.messageId > lastId);
+			let ret = appResp.messages.filter(m => m.messageId > lastId);
 
 			return resolve(ret);
 
@@ -353,7 +353,7 @@ function appendMessages(messages){
 
 function scrollConvToBottom(){
 	return new Promise((resolve) => {
-		var convContainer = $("#conversation").find(".collection").parent();
+		let convContainer = $("#conversation").find(".collection").parent();
 		convContainer.scrollTop(convContainer[0].scrollHeight);
 		return resolve();
 	});
@@ -368,14 +368,14 @@ function updateConversation(){
 				return resolve();
 			}
 
-			var convContainer = $("#conversation").find(".collection").parent();
+			let convContainer = $("#conversation").find(".collection").parent();
 
 			//this should just check if the last element is in view
 			//or subtract its height
-			var scrolledDown = (() => {
+			let scrolledDown = (() => {
 
-				var buffer = (() => {
-					var lastChild = $("#conversation").find(".collection").find("li").last();
+				let buffer = (() => {
+					let lastChild = $("#conversation").find(".collection").find("li").last();
 					return lastChild ? lastChild.height() : 0;
 				})();
 
@@ -387,7 +387,7 @@ function updateConversation(){
 
 			appendMessages(msgs.reverse()).then(() => {
 
-				var unseenCount = messages
+				let unseenCount = messages
 					.filter(record => record.dateSeen === null).length;
 
 				//only update if there are unseen messages
@@ -473,7 +473,7 @@ function displayDetails(){
   			//Update cached copy
   			convDetails = appResp.details;
 
-  			var details = [
+  			let details = [
   				{
   					heading: "Conversation Id",
   					text: convDetails.conversationId
@@ -481,11 +481,15 @@ function displayDetails(){
   				{
   					heading: "Started",
   					text: (() => {
-  						return (
-  							Application.getLongDateFormat(convDetails.dateStarted) +
-  							" (" +
-  							Cola.functions.date.relativeTimestamp(convDetails.dateStarted) +
-  							")");
+
+              let lngDateStarted = Application
+                .getLongDateFormat(convDetails.dateStarted);
+
+              let relDateStarted = Cola.Date
+                .relativeTimestamp(convDetails.dateStarted);
+
+              return `${lngDateStarted} (${relDateStarted})`;
+
   					})()
   				},
   				{
@@ -497,34 +501,48 @@ function displayDetails(){
   				{
   					heading: "Last Active",
   					text: (() => {
-  						return (
-  							Application.getLongDateFormat(convDetails.lastMessageSent) +
-  							" (" +
-  							Cola.functions.date.relativeTimestamp(convDetails.lastMessageSent) +
-  							")");
+
+              let lngDateMsgSent = Application
+                .getLongDateFormat(convDetails.lastMessageSent);
+
+              let relDateMsgSent = Cola.Date
+                .relativeTimestamp(convDetails.lastMessageSent);
+
+              return `${lngDateMsgSent} (${relDateMsgSent})`;
+
   					})()
   				},
   				{
   					heading: "Last Read",
   					text: (() => {
-  						return (
-  							Application.getLongDateFormat(convDetails.lastRead) +
-  							" (" +
-  							Cola.functions.date.relativeTimestamp(convDetails.lastRead) +
-  							")");
+
+              let lngDateLstRead = Application
+                .getLongDateFormat(convDetails.lastRead);
+
+              let relDateLstRead = Cola.Date
+                .relativeTimestamp(convDetails.lastRead);
+
+              return `${lngDateLstRead} (${relDateLstRead})`;
+
   					})()
   				}
   			];
 
   			if(convDetails.ownerEntityType === BungieNet.enums.entityType.group){
-  				details.push({
+
+          details.push({
   					heading: "Group",
   					text: (() => {
 
-  						var anchor = $("<a>").text(convDetails.group.name).attr({
+  						let anchor = $("<a>").text(convDetails.group.name).attr({
   							target: "_blank",
   							href: (() => {
-  								convDetails.group.getLink().then(link => anchor.attr("href", link));
+
+  								convDetails
+                    .group
+                    .getLink()
+                    .then(link => anchor.attr("href", link));
+
   							})
   						});
 
@@ -532,6 +550,7 @@ function displayDetails(){
 
   					})()
   				});
+
   			}
   			else{
 
@@ -539,12 +558,16 @@ function displayDetails(){
   					heading: "Started By",
   					text: (() => {
 
-  						var starter = convDetails.getStarter();
-  						var anchor = $("<a>").text(starter.displayName).attr({
+  						let starter = convDetails.getStarter();
+  						let anchor = $("<a>").text(starter.displayName).attr({
   							target: "_blank",
   							href: (() => {
-  								starter.getProfileLink().then(link => anchor.attr("href", link));
-  							})
+
+  								starter
+                    .getProfileLink()
+                    .then(link => anchor.attr("href", link));
+
+                })
   						});
 
   						return anchor;
@@ -556,10 +579,10 @@ function displayDetails(){
   					heading: "Participants",
   					text: (() => {
 
-  						var promises = convDetails.participants.map((u) => {
+  						let promises = convDetails.participants.map((u) => {
   							return new Promise((resolve) => {
 
-  								var anchor = $("<a>").text(u.displayName).attr({
+  								let anchor = $("<a>").text(u.displayName).attr({
   									target: "_blank"
   								});
 
@@ -571,7 +594,7 @@ function displayDetails(){
   							});
   						});
 
-  						var target = $("<span>");
+  						let target = $("<span>");
 
   						Promise.all(promises).then((anchors) => {
   							target.append(anchors.map(a => a[0].outerHTML).join("; "));
@@ -584,13 +607,15 @@ function displayDetails(){
 
         }
 
-  			var div = $("<div>").addClass("container section").css("fontSize", "14px");
+  			let div = $("<div>")
+          .addClass("container section")
+          .css("fontSize", "14px");
 
   			div.append(details.map((d) => {
   				return $("<div>").append(
-  					$("<b>").text(d.heading),
-  					": ",
-  					d.text
+            $("<b>").text(d.heading),
+            ": ",
+            d.text
   				);
   			}));
 
@@ -608,9 +633,9 @@ function displaySettings(){
 
 function handleFileDrop(evt){
 
-	var file = evt.originalEvent.dataTransfer.files[0];
-	var item = evt.originalEvent.dataTransfer.items[0];
-	var url = evt.originalEvent.dataTransfer.getData("URL");
+	let file = evt.originalEvent.dataTransfer.files[0];
+	let item = evt.originalEvent.dataTransfer.items[0];
+	let url = evt.originalEvent.dataTransfer.getData("URL");
 
 	if(url){
 		this.value += url;
@@ -668,17 +693,17 @@ function showDetails(){
 
 function updateTitle(count = 0){
 	return new Promise((resolve) => {
-    
-		var promise;
+
+		let promise;
 
 		if(convDetails.ownerEntityType === BungieNet.enums.entityType.group){
 			promise = Promise.resolve(convDetails.group.name);
 		}
 		else{
 			promise = new Promise((resolve) => {
-				BungieNet.currentUser.getMembershipId().then((myId) => {
+				BungieNet.CurrentUser.getMembershipId().then((myId) => {
 
-					var str = convDetails.participants
+					let str = convDetails.participants
 						.filter(p => p.membershipId !== myId)
 						.map(u => u.displayName)
 						.join("; ");
@@ -692,7 +717,7 @@ function updateTitle(count = 0){
 		promise.then((str) => {
 
 			if(count > 0){
-				str = "(" + count.toLocaleString() + ") " + str;
+        str = `(${count.toLocaleString()}) ${str}`;
 			}
 
 			document.title = str;
@@ -710,7 +735,7 @@ function calculateInterval(){
 		return intervals.default;
 	}
 
-	var delta = messages
+	let delta = messages
 		.map(record => record.msg.dateSent.getTime())
 		.reduce((p, v) => (p > v ? p : v));
 
@@ -718,10 +743,10 @@ function calculateInterval(){
 		delta = intervals.max + delta;
 	}
 
-	var diff = Date.now() - delta;
-	var x = diff / intervals.max;
-	var y = Math.pow(x, 2.3);
-	var total = (y + 1) * diff;
+	let diff = Date.now() - delta;
+	let x = diff / intervals.max;
+	let y = Math.pow(x, 2.3);
+	let total = (y + 1) * diff;
 
 	total = Math.max(intervals.min, total);
 	total = Math.min(intervals.max, total);
@@ -732,8 +757,8 @@ function calculateInterval(){
 
 function updateProxy(){
 	return updateConversation().then(() => {
-		var milli = calculateInterval();
-		Application.log("Checking again in " + (milli / 1000) + " seconds");
+		let milli = calculateInterval();
+		Application.log(`Checking again in ${milli / 1000} seconds`);
     window.clearTimeout(timeoutId); //clear any existing timeouts just in case...
 		timeoutId = window.setTimeout(updateProxy, milli);
 	});
@@ -743,7 +768,7 @@ function updateProxy(){
 
 function getPageableEnder(){
 
-  var ender = $("#pageableEnderTemplate").find("div").clone();
+  let ender = $("#pageableEnderTemplate").find("div").clone();
 
   ender.find("a").text(chrome.i18n.getMessage("application_pageable_load_button"));
   ender.find("span").text(chrome.i18n.getMessage("application_pageable_no_more"));
@@ -803,7 +828,7 @@ function dialogReady(){
     .then(addEventHandlers)
     .then(() => {
       return new Promise((resolve, reject) => {
-        getConversationDetails(Application.queryString["conversationId"])
+        getConversationDetails(Application.queryString.conversationId)
           .then((appResp) => {
             convDetails = appResp.details;
             updateTitle(0); //cancel out the initial unread count

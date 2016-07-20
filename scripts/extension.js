@@ -1,8 +1,8 @@
 //init
 
-//if browser is chrome
-Application.browserAdaptor = new ChromeAdaptor();
-//else
-//something, something firefox
+//TODO: all message id should be treated as bigints
+//TODO: use @@ui_locale to better display messages
+//TODO: maybe switch to moment.js
 
-BungieNet.cookies.provider = new ChromeDomainCookieProvider(BungieNet.domain);
+Application.browserAdaptor = new ChromeAdaptor();
+BungieNet.Cookies.provider = new ChromeDomainCookieProvider(BungieNet.domain);

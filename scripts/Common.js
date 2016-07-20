@@ -14,12 +14,11 @@ var Common = {
 
 			$("#sideMenu").append(items.map((item) => {
 
-				return $("<li>").css("cursor", "pointer").addClass("valign-wrapper").append(
+				return $("<li>").addClass("valign-wrapper").append(
 
-          $("<i>").addClass("material-icons left valign").css({
-						color: "rgba(0, 0, 0, 0.54)",
-						margin: 0
-					}).text(item.icon ? item.icon : ""),
+          $("<i>")
+						.addClass("material-icons left valign")
+						.text(item.icon ? item.icon : ""),
 
 					$("<a>").attr("href", "#!").text(item.name)
 
@@ -43,7 +42,7 @@ var Common = {
 			}));
 
 			$(".button-collapse").sideNav({
-				menuWidth: 150,
+				menuWidth: 170,
 				edge: "left",
 				closeOnClick: true
 			});
@@ -96,11 +95,11 @@ var Common = {
 
 	loadStylesheets: () => {
 		return new Promise((resolve) => {
-			for(var name in Application.constants.themes){
+			for(let name in Application.constants.themes){
 				$("<link>").attr({
 					type: "text/css",
 					rel: "alternate stylesheet",
-					href: "css/" + name + "-theme.css",
+					href: "/css/" + name + "-theme.css",
 					title: name,
 					disabled: "disabled"
 				}).appendTo("head");
@@ -120,8 +119,8 @@ var Common = {
       //Prevent resize
       $(window).resize(() => {
 
-        var height = window.outerHeight;
-        var width = window.outerWidth;
+        let height = window.outerHeight;
+        let width = window.outerWidth;
 
         if(height < Application.constants.dialogWindowMinHeight){
           height = Application.constants.dialogWindowMinHeight;
@@ -150,7 +149,7 @@ var Common = {
 
 		Application.log(err);
 
-		var str;
+		let str;
 
 		if(err instanceof BungieNet.Error){
 			str = chrome.i18n.getMessage("application_error_bungie_net_lib");
@@ -162,14 +161,14 @@ var Common = {
 			str = chrome.i18n.getMessage("application_error_unknown");
 		}
 
-		Common.displayMessage(Cola.functions.string.htmlEncode(str));
+		Common.displayMessage(Cola.String.htmlEncode(str));
 
   },
 
 	openConversationWindow: (conversationId) => {
 		return new Promise((resolve) => {
 			chrome.windows.create({
-				url: "conversation.html?conversationId=" + conversationId,
+				url: "/html/conversation.html?conversationId=" + conversationId,
 				type: "popup",
 				focused: true,
 				width: Application.constants.dialogWindowWidth,

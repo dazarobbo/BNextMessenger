@@ -35,11 +35,11 @@ function formatBuddy(u){
 	return new Promise((resolve) => {
 
 		//in the last 30 minutes
-		var since = Date.now() - (30 * 60 * 1000);
-		var lastActive = u.getLastActiveDate();
-		var isOnline = lastActive >= since;
+		let since = Date.now() - (30 * 60 * 1000);
+		let lastActive = u.getLastActiveDate();
+		let isOnline = lastActive >= since;
 
-		var li = $("<li>")
+		let li = $("<li>")
 			.addClass("collection-item avatar")
 			.append(
 				$("<img>").attr({
@@ -58,7 +58,7 @@ function formatBuddy(u){
 					href: "#!",
 					title: (() => {
 
-						var str = "last online: ";
+						let str = "last online: ";
 
 						if(lastActive.getFullYear() < 2000){
 							str += "not available";
@@ -75,7 +75,7 @@ function formatBuddy(u){
 			)
 			.click(() => {
 				chrome.windows.create({
-					url: "conversation2.html?membershipId=" + u.membershipId,
+					url: `/html/conversation2.html?membershipId=${u.membershipId}`,
 					type: "popup",
 					focused: true,
 					width: Application.constants.dialogWindowWidth,
@@ -94,11 +94,12 @@ function formatBuddy(u){
 
 function formatPm(pm){
 	return new Promise((resolve) => {
-		BungieNet.currentUser.getMembershipId().then((myId) => {
+		BungieNet.CurrentUser.getMembershipId().then((myId) => {
 
-			var others = pm.participants.filter(u => u.membershipId !== myId);
+			let others = pm.participants
+        .filter(u => u.membershipId !== myId);
 
-			var li = $("#messageTemplate").find("li").clone();
+			let li = $("#messageTemplate").find("li").clone();
 
 			li.find("img").attr("src", others.length > 0 ?
 				others[0].getAvatarLink() :
@@ -109,7 +110,7 @@ function formatPm(pm){
 			li.find("p").text(pm.getHtmlDecodedBody());
 			li.find("a")
 				.attr("title", Application.getLongDateFormat(pm.lastMessageSent))
-				.text(Cola.functions.date.relativeTimestamp(pm.lastMessageSent));
+				.text(Cola.Date.relativeTimestamp(pm.lastMessageSent));
 			li.click(() => {
         Application.getConversationWindowId(pm.conversationId).then((wndwId) => {
           (new Application.Dialog(wndwId)).focus();
@@ -127,14 +128,14 @@ function formatPm(pm){
 function formatGroupPm(conv){
 	return new Promise((resolve) => {
 
-		var li = $("#messageTemplate").find("li").clone();
+		let li = $("#messageTemplate").find("li").clone();
 
 		li.find("img").attr("src", conv.group.getAvatarLink());
 		li.find("span").text(conv.group.name);
 		li.find("p").text(conv.getHtmlDecodedBody());
 		li.find("a")
 			.attr("title", Application.getLongDateFormat(conv.lastMessageSent))
-			.text(Cola.functions.date.relativeTimestamp(conv.lastMessageSent));
+			.text(Cola.Date.relativeTimestamp(conv.lastMessageSent));
 		li.click(() => {
       Application.getConversationWindowId(conv.conversationId).then((wndwId) => {
         (new Application.Dialog(wndwId)).focus();
@@ -150,7 +151,7 @@ function formatGroupPm(conv){
 
 function getPageableEnder(){
 
-  var ender = $("#pageableEnderTemplate").find("div").clone();
+  let ender = $("#pageableEnderTemplate").find("div").clone();
 
   ender.find("a").text(chrome.i18n.getMessage("application_pageable_load_button"));
   ender.find("span").text(chrome.i18n.getMessage("application_pageable_no_more"));
@@ -168,37 +169,37 @@ function addLocaleElements(){
 
 
     //settings
-    var statusSection = $("#settings div.section:eq(0)");
+    let statusSection = $("#settings div.section:eq(0)");
     statusSection.find("h5").text(
       chrome.i18n.getMessage("application_settings_status_updates_heading"));
     statusSection.find("p > label").text(
       chrome.i18n.getMessage("application_settings_status_updates_summary"));
 
-    var emojiSection = $("#settings div.section:eq(1)");
+    let emojiSection = $("#settings div.section:eq(1)");
     emojiSection.find("h5").text(
       chrome.i18n.getMessage("application_settings_emoji_heading"));
     emojiSection.find("p > label").text(
       chrome.i18n.getMessage("application_settings_emoji_summary"));
 
-    var themeSection = $("#settings div.section:eq(2)");
+    let themeSection = $("#settings div.section:eq(2)");
     themeSection.find("h5").text(
       chrome.i18n.getMessage("application_settings_theme_heading"));
 
-    var themeName;
-    for(var key in Application.constants.themes){
+    let themeName;
+    for(let key in Application.constants.themes){
       themeName = Application.constants.themes[key];
       themeSection.append(
         $("<p>").append(
           $("<input>").attr({
             name: "themeGrp",
             type: "radio",
-            id: "theme-" + themeName + "-rad",
+            id: `theme-${themeName}-rad`,
             value: themeName
           }),
           $("<label>").attr({
-            for: "theme-" + themeName + "-rad"
+            for: `theme-${themeName}-rad`
           }).text(chrome.i18n.getMessage(
-            "application_settings_theme_option_" + themeName))
+            `application_settings_theme_option_${themeName}`))
         )
       );
     }
@@ -254,7 +255,7 @@ function loadPrivateMessages(){
 				//Append the new conversations
 				$("#private").find(".collection").append(elements);
 
-				var ender = $("#private").find("> div").removeClass("hide");
+				let ender = $("#private").find("> div").removeClass("hide");
 
 				//Check if there are any more
 				if(appResp.response.response.hasMore){
@@ -281,7 +282,7 @@ function loadGroupMessages(){
 
 				$("#group").find(".collection").append(elements);
 
-				var ender = $("#group").find("> div").removeClass("hide");
+				let ender = $("#group").find("> div").removeClass("hide");
 
 				//Check if there are any more
 				if(appResp.response.response.hasMore){
@@ -437,13 +438,13 @@ function showAbout(){
     $("#about")
       .removeClass("hide");
 
-		var strings = [
+		let strings = [
 			chrome.i18n.getMessage("application_about_1"),
 			chrome.i18n.getMessage("application_about_2"),
 			chrome.i18n.getMessage("application_about_3"),
 			chrome.i18n.getMessage(
 					"application_about_4",
-					Cola.functions.string.htmlEncode(chrome.runtime.getManifest().version)
+					Cola.String.htmlEncode(chrome.runtime.getManifest().version)
 			)
 		];
 

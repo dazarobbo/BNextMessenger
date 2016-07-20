@@ -122,7 +122,7 @@
 		"message": "An unknown error has occurred"
 	},
 	"application_error_bungie_net_lib": {
-		"message": "Coudn't communicate with bungie.net"
+		"message": "Couldn't communicate with bungie.net"
 	},
 	"application_error_bungie_net": {
 		"message": "bungie.net error $CODE$ - $REASON$",
@@ -147,6 +147,5 @@
 	"application_error_code_6": {
 		"message": "Couldn't upload to imgur"
 	}
-
 
 }

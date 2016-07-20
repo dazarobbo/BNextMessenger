@@ -6,7 +6,7 @@ chrome.runtime.onInstalled.addListener((details) => {
   }
 
   //Set storage defaults
-  var obj = {};
+  let obj = {};
 
   obj[Application.constants.storageKeys.themeName] =
     Application.constants.themes.light;

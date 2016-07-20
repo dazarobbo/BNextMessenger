@@ -1,6 +1,4 @@
 
-Application.log("Running status updates...");
-
 //Create alarm for updating status
 chrome.alarms.create(Application.constants.alarmKeys.statusUpdates, {
 	periodInMinutes: Math.ceil(Application.constants.statusUpdateInterval / 60)
@@ -31,7 +29,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 				Application.User.updateStatus(Application.getStatusUpdateMessage())
 					.then(
 						() => Application.log("Status updated"),
-						(ex) => Application.log("Status update failed: " + ex.toString())
+						(ex) => Application.log(`Status update failed: ${ex.toString()}`)
 					);
 
 			});

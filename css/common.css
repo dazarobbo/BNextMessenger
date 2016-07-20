@@ -29,6 +29,12 @@ nav .button-collapse{
 
 nav .side-nav li{
 	padding-left: 10px;
+	cursor: pointer;
+}
+
+nav .side-nav li .material-icons{
+	color: rgba(0, 0, 0, 0.54);
+	margin: 0;
 }
 
 #loader{
