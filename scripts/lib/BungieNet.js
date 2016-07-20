@@ -21,7 +21,7 @@
  *
  *
  * The cookie provider should be similar to:
- * 	BungieNet.cookieProvider = new CustomCookieProvider();
+ * 	BungieNet.Cookies.provider = new CustomCookieProvider();
  * =============================================================================
  */
 class BungieNet{
