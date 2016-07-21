@@ -2579,12 +2579,4 @@ BungieNet.Platform.Response = class{
 
 };
 
-
-
-
-
-
-
-
-
 //

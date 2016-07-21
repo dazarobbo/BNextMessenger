@@ -111,11 +111,6 @@ var Common = {
   applySizing: () => {
     return new Promise((resolve) => {
 
-      //$(document.body).css({
-      //  width: Application.constants.dialogWindowWidth,
-      //  height: Application.constants.dialogWindowHeight
-      //});
-
       //Prevent resize
       $(window).resize(() => {
 

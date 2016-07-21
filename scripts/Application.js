@@ -14,7 +14,6 @@ Object.defineProperties(Application, {
 	getLongDateFormat: {
 		/**
 		 * Returns a long date string in a locale-aware format
-		 * @name Application.getLongDateFormat
 		 * @param {Date} d - the date to format
 		 */
 		value: (d) => {
